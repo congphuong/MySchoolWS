@@ -33,6 +33,7 @@ public class CommentDAO {
 
                     cmts.add(new Comment(idCmt, content, d, userID, idTopic));
                 }
+                Connect.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

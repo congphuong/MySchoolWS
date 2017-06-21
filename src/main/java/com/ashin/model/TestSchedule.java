@@ -8,20 +8,49 @@ import java.util.Date;
 public class TestSchedule {
     private int semester;
     private int idSubject;
+    private String nameSubject;
+    private int idClass;
+    private String nameClass;
     private Date testDay;
     private int startLesson;
     private int testTime;
 
     public TestSchedule() {
-
     }
 
-    public TestSchedule(int semester, int idSubject, Date testDay, int startLesson, int testTime) {
+    public TestSchedule(int semester, int idSubject, String nameSubject, int idClass, String nameClass, Date testDay, int startLesson, int testTime) {
         this.semester = semester;
         this.idSubject = idSubject;
+        this.nameSubject = nameSubject;
+        this.idClass = idClass;
+        this.nameClass = nameClass;
         this.testDay = testDay;
         this.startLesson = startLesson;
         this.testTime = testTime;
+    }
+
+    public String getNameSubject() {
+        return nameSubject;
+    }
+
+    public void setNameSubject(String nameSubject) {
+        this.nameSubject = nameSubject;
+    }
+
+    public int getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(int idClass) {
+        this.idClass = idClass;
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
     }
 
     public int getSemester() {

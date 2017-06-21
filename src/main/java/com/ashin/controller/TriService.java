@@ -1,10 +1,12 @@
 package com.ashin.controller;
 
 
+import com.ashin.DAO.RegisterDAO;
 import com.ashin.model.Comment;
 import com.ashin.DAO.CommentDAO;
 import com.ashin.model.Topic;
 import com.ashin.DAO.TopicDAO;
+import com.ashin.model.UserRegister;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -15,8 +17,10 @@ import java.util.ArrayList;
  */
 @RestController
 public class TriService {
+
     private CommentDAO commentDAO = new CommentDAO();
     private TopicDAO topicDAO = new TopicDAO();
+    private RegisterDAO registerDAO = new RegisterDAO();
     private static final String SUCCESS_RESULT = "SUCCESS";
     private static final String FAILURE_RESULT = "FAILURE";
 
@@ -114,5 +118,19 @@ public class TriService {
     public Topic delComment(@RequestBody Topic topic) throws SQLException {
         Topic result = topicDAO.deleteTopic(topic);
         return result;
+    }
+
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    public String register(@RequestBody UserRegister userRegister){
+        int result = registerDAO.addUser(userRegister);
+        if(result==1){
+            return SUCCESS_RESULT;
+        }
+        return FAILURE_RESULT;
+    }
+
+    @RequestMapping(value = "user/test", method = RequestMethod.GET)
+    public UserRegister getUserRegister(){
+        return new UserRegister("HS004", "ASCASC", 111);
     }
 }

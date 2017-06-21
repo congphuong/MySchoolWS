@@ -6,10 +6,9 @@ import java.util.Date;
  * Created by Khuong on 2017-06-05.
  */
 public class Student {
-    int idStudent, idClass, idSchool, phone;
-    String name, sex, address, username;
-    Date dateBorn;
-
+    private int idStudent, idClass, idSchool, phone;
+    private String name, sex, address, username;
+    private Date dateBorn;
 
     public Student(int idStudent, String name, Date dateBorn, String sex, int idClass, int idSchool, String address, int phone, String username) {
         this.idStudent = idStudent;

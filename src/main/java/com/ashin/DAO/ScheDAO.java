@@ -14,20 +14,24 @@ public class ScheDAO {
         try {
             ArrayList<Schedule> list = new ArrayList<Schedule>();
             PreparedStatement ps = Connect
-                    .getPreparedStatement("SELECT * from thoikhoabieu where MA_LOP=? and HOC_KY=? and THU=?");
+                    .getPreparedStatement("SELECT * from V_TKB where V_TKB.MA_LOP=? and V_TKB.HOC_KY=? and V_TKB.THU=?");
             ps.setInt(1, idClass);
             ps.setInt(2, semester);
             ps.setInt(3, weekday);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Schedule sc = new Schedule();
-                sc.setIdClass(rs.getInt(1));
-                sc.setSemester(rs.getInt(2));
-                sc.setIdSubject(rs.getInt(3));
-                sc.setWeekday(rs.getInt(4));
-                sc.setLesson(rs.getInt(5));
+                sc.setIdTeacher(rs.getInt(1));
+                sc.setIdClass(rs.getInt(2));
+                sc.setNameClass(rs.getString(3));
+                sc.setIdSubject(rs.getInt(4));
+                sc.setNameSubject(rs.getString(5));
+                sc.setSemester(rs.getInt(6));
+                sc.setWeekday(rs.getInt(7));
+                sc.setLesson(rs.getInt(8));
                 list.add(sc);
             }
+            Connect.close();
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,6 +51,7 @@ public class ScheDAO {
             while (rs.next()) {
                 nameSubject = rs.getString(2);
             }
+            Connect.close();
             return nameSubject;
         } catch (Exception e) {
             e.printStackTrace();

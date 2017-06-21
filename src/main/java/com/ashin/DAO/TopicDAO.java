@@ -44,6 +44,7 @@ public class TopicDAO {
                 e.printStackTrace();
             }
         }
+        Connect.close();
         return listTopics;
     }
 
@@ -55,7 +56,6 @@ public class TopicDAO {
 //        Connection cnt = Connect.open();;
         PreparedStatement ps = Connect
                 .getPreparedStatement("INSERT INTO TOPIC(USERNAME, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUES (?,now(),?,?,0)");
-
         try {
             int i;
             ps.setString(1, t.getUserID());
@@ -69,7 +69,7 @@ public class TopicDAO {
             e.printStackTrace();
             result = 0;
         }
-
+        Connect.close();
         return result;
     }
 

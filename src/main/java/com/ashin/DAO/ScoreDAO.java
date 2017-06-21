@@ -29,22 +29,23 @@ public class ScoreDAO {
                 double mlphut = rs.getDouble(6);
                 double mtiet = rs.getDouble(7);
                 double cuoiKy = rs.getDouble(8);
+                double tongKet = rs.getDouble(9);
                 int hocKy = rs.getInt(10);
 
-                ScoreBoard sc = new ScoreBoard(idStd, nameStudent, nameClass, nameSubject, mieng, mlphut, mtiet, cuoiKy, hocKy);
-                sc.setTongket(sc.diemTongKet());
-
-                scoreBoards.add(new ScoreBoard(idStd, nameStudent, nameClass, nameSubject, mieng, mlphut, mtiet, cuoiKy, hocKy));
+                scoreBoards.add( new ScoreBoard(idStd, nameStudent, nameClass, nameSubject, mieng, mlphut, mtiet, cuoiKy, tongKet, hocKy));
             }
+            Connect.close();
+            return scoreBoards;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return scoreBoards;
     }
 
     public static void main(String[] args) {
         ScoreDAO sd = new ScoreDAO();
 //        System.out.println(sd.showScore(1,1).getTotalScore());
-        System.out.println(sd.showScore(14130241));
+        System.out.println(sd.showScore(5));
     }
 }

@@ -21,14 +21,14 @@ public class StudentDAO {
             while (rs.next()) {
                 st.setIdStudent(rs.getInt(1));
                 st.setName(rs.getString(2));
-                st.setDateBorn(rs.getDate(3));
-                st.setSex(rs.getString(4));
-                st.setIdClass(rs.getInt(5));
+                st.setDateBorn(rs.getDate(4));
+                st.setSex(rs.getString(5));
                 st.setIdSchool(rs.getInt(6));
                 st.setAddress(rs.getString(7));
                 st.setPhone(rs.getInt(8));
-                st.setUsername(rs.getString(9));
+                st.setUsername(rs.getString(3));
             }
+            Connect.close();
             return st;
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,29 +37,14 @@ public class StudentDAO {
     }
 
     //method lay ten lop
-    public String getNameClass(int idClass) {
-        try {
-            String nameSubject = "";
-            PreparedStatement ps = Connect
-                    .getPreparedStatement("SELECT * from lop where MA_LOP=?");
-            ps.setInt(1, idClass);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                nameSubject = rs.getString(3);
-            }
-            return nameSubject;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+
 
     // method xem danh sach hoc sinh trong mot lop dua vao ma lop
     public ArrayList<Student> showListStudent(int idClass) {
         try {
             ArrayList<Student> listStudent = new ArrayList<Student>();
             PreparedStatement ps = Connect
-                    .getPreparedStatement("SELECT * from hocsinh where MA_LOP=?");
+                    .getPreparedStatement("SELECT * FROM V_INFOSTD where V_INFOSTD.MA_LOP=? AND V_INFOSTD.USERNAME IS NOT NULL;");
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -71,8 +56,12 @@ public class StudentDAO {
                 st.setIdClass(rs.getInt(5));
                 st.setIdSchool(rs.getInt(6));
                 st.setAddress(rs.getString(7));
+                st.setPhone(rs.getInt(8));
+                st.setUsername(rs.getString(9));
+
                 listStudent.add(st);
             }
+            Connect.close();
             return listStudent;
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,13 +71,7 @@ public class StudentDAO {
 
     //test
     public static void main(String[] args) {
-        StudentDAO studentDAO = new StudentDAO();
-        ArrayList<Student> list = new ArrayList<Student>();
-        list = studentDAO.showListStudent(1);
-        for (Student s : list) {
-            System.out.println(s.getIdStudent() + " " + s.getName() + " " + s.getDateBorn() + " " + " "
-                    + s.getSex() + " " + studentDAO.getNameClass(s.getIdClass()) + " " + s.getAddress());
-        }
+
 
     }
 

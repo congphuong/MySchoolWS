@@ -26,6 +26,7 @@ public class TeacherDAO {
                 pa.setIdSchool(rs.getInt(6));
                 pa.setUsername(rs.getString(7));
             }
+            Connect.close();
             return pa;
         } catch (Exception e) {
             e.printStackTrace();

@@ -44,10 +44,10 @@ public class ParentDAO {
             while (rs.next()) {
                 pa.setIdParent(rs.getInt(1));
                 pa.setName(rs.getString(2));
-                pa.setSex(rs.getString(3));
-                pa.setDateBorn(rs.getDate(4));
-                pa.setAddress(rs.getString(5));
-                pa.setUser(rs.getString(6));
+                pa.setSex(rs.getString(6));
+                pa.setDateBorn(rs.getDate(3));
+                pa.setAddress(rs.getString(4));
+                pa.setUser(rs.getString(5));
             }
             return pa;
         } catch (Exception e) {
@@ -65,7 +65,6 @@ public class ParentDAO {
             System.out.println(parent.getIdParent() + " " + parent.getName() + " "
                     + parent.getSex() + " " + parent.getDateBorn() + " " + parent.getAddress());
         }
-
 
     }
 

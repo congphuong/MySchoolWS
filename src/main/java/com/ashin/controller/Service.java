@@ -69,7 +69,7 @@ public class Service {
         return std.showInformationStudent(idstudent);
     }
 
-    @RequestMapping(value = "studentsbyclass/{idstudent}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "studentsbyclass/{idclass}", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Student> showStudentInforByClass(@PathVariable int idclass) {
         return std.showListStudent(idclass);
     }

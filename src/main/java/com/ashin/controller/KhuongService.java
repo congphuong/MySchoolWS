@@ -17,38 +17,38 @@ public class KhuongService {
     private AccountDAO accountDAO = new AccountDAO();
 
     //--------register--------
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public MessageResult register(@RequestBody Account account) {
-        AccountDAO ad = new AccountDAO();
-        MessageResult messageResult = new MessageResult();
-        //check username is identical
-        if (!ad.checkUserExist(account.getUsername())) {
-            //tao mot account moi
-            ad.register(account);
-            messageResult.setSuccess(true);
-            messageResult.setMessage("Register is sucessful.Wellcome");
-        } else {
-            messageResult.setSuccess(false);
-            messageResult.setMessage("Register Fail");
-        }
-        return messageResult;
-    }
+//    @RequestMapping(value = "/register", method = RequestMethod.POST)
+//    public MessageResult register(@RequestBody Account account) {
+//        AccountDAO ad = new AccountDAO();
+//        MessageResult messageResult = new MessageResult();
+//        //check username is identical
+//        if (!ad.checkUserExist(account.getUsername())) {
+//            //tao mot account moi
+//            ad.register(account);
+//            messageResult.setSuccess(true);
+//            messageResult.setMessage("Register is sucessful.Wellcome");
+//        } else {
+//            messageResult.setSuccess(false);
+//            messageResult.setMessage("Register Fail");
+//        }
+//        return messageResult;
+//    }
 
     //------login----
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public MessageResult login(@RequestBody User user) {
-        MessageResult messageResult = new MessageResult();
-        AccountDAO ad = new AccountDAO();
-        //check username,password is correct?
-        if (ad.checkAccount(user.getUsername(), user.getPassword()) == true) {
-            messageResult.setSuccess(true);
-            messageResult.setMessage("Login sucess.Wellcome");
-        } else {
-            messageResult.setSuccess(false);
-            messageResult.setMessage("Your username or password is incorrect. Please try again.");
-        }
-        return messageResult;
-    }
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public MessageResult login(@RequestBody User user) {
+//        MessageResult messageResult = new MessageResult();
+//        AccountDAO ad = new AccountDAO();
+//        //check username,password is correct?
+//        if (ad.checkAccount(user.getUsername(), user.getPassword()) == true) {
+//            messageResult.setSuccess(true);
+//            messageResult.setMessage("Login sucess.Wellcome");
+//        } else {
+//            messageResult.setSuccess(false);
+//            messageResult.setMessage("Your username or password is incorrect. Please try again.");
+//        }
+//        return messageResult;
+//    }
 
     //----change password----
     @RequestMapping(value = "/changepw/{newPw}", method = RequestMethod.PUT)
@@ -90,10 +90,10 @@ public class KhuongService {
     }
 
     //------view TestSChedule----
-    @RequestMapping(value = "/viewTestSchedule/{semester}", method = RequestMethod.GET)
-    public ArrayList<TestSchedule> getTestSchedule(@PathVariable int semester) {
+    @RequestMapping(value = "/viewTestSchedule/{semester}/{idClass}", method = RequestMethod.GET)
+    public ArrayList<TestSchedule> getTestSchedule(@PathVariable int semester, @PathVariable int idClass) {
         TestScheDAO testSchDAO = new TestScheDAO();
-        return testSchDAO.showTestSchedule(semester);
+        return testSchDAO.showTestSchedule(semester, idClass);
     }
 
     //-----view Schedule-----

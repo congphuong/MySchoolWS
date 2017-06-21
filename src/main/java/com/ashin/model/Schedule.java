@@ -4,21 +4,51 @@ package com.ashin.model;
  * Created by Khuong on 2017-06-05.
  */
 public class Schedule {
+    private int idTeacher;
     private int idClass;
-    private int semester;
+    private String nameClass;
     private int idSubject;
+    private String nameSubject;
+    private int semester;
     private int weekday;
     private int lesson;
 
     public Schedule() {
     }
 
-    public Schedule(int idClass, int semester, int idSubject, int weekday, int lesson) {
+    public Schedule(int idTeacher, int idClass, String nameClass, int idSubject, String nameSubject, int semester, int weekday, int lesson) {
+        this.idTeacher = idTeacher;
         this.idClass = idClass;
-        this.semester = semester;
+        this.nameClass = nameClass;
         this.idSubject = idSubject;
+        this.nameSubject = nameSubject;
+        this.semester = semester;
         this.weekday = weekday;
         this.lesson = lesson;
+    }
+
+    public int getIdTeacher() {
+        return idTeacher;
+    }
+
+    public void setIdTeacher(int idTeacher) {
+        this.idTeacher = idTeacher;
+    }
+
+    public String getNameSubject() {
+        return nameSubject;
+    }
+
+    public void setNameSubject(String nameSubject) {
+        this.nameSubject = nameSubject;
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
     }
 
     public int getIdClass() {

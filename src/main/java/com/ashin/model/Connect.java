@@ -23,8 +23,8 @@ public class Connect {
     public static Connection open() {
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/project?useSSL=false", "root",
-                    ""); // project thay ten database cua tui bay vao, user,pass điền vào
+                    "jdbc:mysql://localhost/MYSCHOOL1?useSSL=false", "root",
+                    "1234"); // project thay ten database cua tui bay vao, user,pass điền vào
             return conn;
 
         } catch (SQLException e) {

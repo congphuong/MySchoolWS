@@ -20,6 +20,7 @@ public class AccountDAO {
             while (rs.next()) {
                 login = true;
             }
+            Connect.close();
         } catch (Exception e) {
         }
         return login;
@@ -34,6 +35,7 @@ public class AccountDAO {
             while (rs.next()) {
                 check = true;
             }
+            Connect.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -70,7 +72,7 @@ public class AccountDAO {
             ps.setString(1, newPass);
             ps.executeUpdate();
             System.out.println("Succeed !");
-
+            Connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +84,8 @@ public class AccountDAO {
                     .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + input.getUsername() + "'");
             ps.setString(1, input.getToken());
             ps.executeUpdate();
-            System.out.println("Succeed update token !");
+//            System.out.println("Succeed update token !");
+            Connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,6 +125,7 @@ public class AccountDAO {
                 user.setChucVu(rs.getString(4));
                 user.setMaChucVu(rs.getInt(5));
             }
+            Connect.close();
         } catch (Exception e) {
         }
         return user;

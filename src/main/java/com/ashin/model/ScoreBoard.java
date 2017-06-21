@@ -27,6 +27,19 @@ public class ScoreBoard {
         this.term = term;
     }
 
+    public ScoreBoard(int idStudent, String nameStudent, String nameClass, String nameSubject, double mieng, double mlphut, double mtiet, double cuoiky, double tongket, int term) {
+        this.idStudent = idStudent;
+        this.nameStudent = nameStudent;
+        this.nameClass = nameClass;
+        this.nameSubject = nameSubject;
+        this.mieng = mieng;
+        this.mlphut = mlphut;
+        this.mtiet = mtiet;
+        this.cuoiky = cuoiky;
+        this.tongket = tongket;
+        this.term = term;
+    }
+
     public ScoreBoard() {
     }
 
@@ -126,7 +139,7 @@ public class ScoreBoard {
                 ", mlphut=" + mlphut +
                 ", mtiet=" + mtiet +
                 ", cuoiky=" + cuoiky +
-                ", tongket=" + diemTongKet() +
+                ", tongket=" + tongket +
                 ", term=" + term +
                 '}';
     }

@@ -30,7 +30,7 @@ public class NotifDAO {
             ps.setTimestamp(6, notif.getDate());
             ps.executeUpdate();
             pn.sendNotification(notif);
-            System.out.println("Succeed !");
+            Connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +51,7 @@ public class NotifDAO {
                 no.setNoti(rs.getString(5));
                 no.setDate(rs.getTimestamp(6));
             }
+            Connect.close();
             return no;
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +70,7 @@ public class NotifDAO {
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
+            Connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,6 +106,7 @@ public class NotifDAO {
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
+            Connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +120,7 @@ public class NotifDAO {
                     .getPreparedStatement("update THONGBAO set NOI_DUNG=? where ID_TB='" + idNotif + "'");
             ps.setString(1, input.getNoti());
             ps.executeUpdate();
-            System.out.println("Succeed !");
+            Connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,6 +144,7 @@ public class NotifDAO {
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
+            Connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,7 +174,7 @@ public class NotifDAO {
                     .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + idUser + "'");
             ps.setString(1, input);
             ps.executeUpdate();
-            System.out.println("Succeed !");
+            Connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
