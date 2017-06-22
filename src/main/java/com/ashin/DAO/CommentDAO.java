@@ -164,6 +164,7 @@ public class CommentDAO {
 
                 cmts.add(new Comment(idCmt, content, d, userID, idTopic));
             }
+            Connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

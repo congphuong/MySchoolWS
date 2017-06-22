@@ -27,14 +27,13 @@ public class Service {
         return nd.view(id);
     }
 
-    @RequestMapping(value = "notifications/receivers", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Notification> loadNotifByReceiver() {
-        return nd.viewByReceiver(JwtGetUserDetail.getCurrentUserDetail().getUsername());
+    @RequestMapping(value = "notifications/receivers/{page}&{numPerPage}",method = RequestMethod.GET,headers ="Accept=application/json")
+    public List<Notification> loadNotifByReceiver(@PathVariable int page,@PathVariable int numPerPage) {
+        return nd.loadNotifPerPageReceiver(page,numPerPage,JwtGetUserDetail.getCurrentUserDetail().getUsername());
     }
-
-    @RequestMapping(value = "notifications/senders", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Notification> loadNotifBySender() {
-        return nd.viewBySender(JwtGetUserDetail.getCurrentUserDetail().getUsername());
+    @RequestMapping(value = "notifications/senders/{page}&{numPerPage}",method = RequestMethod.GET,headers ="Accept=application/json")
+    public List<Notification> loadNotifBySender(@PathVariable int page,@PathVariable int numPerPage) {
+        return nd.loadNotifPerPageSender(page,numPerPage,JwtGetUserDetail.getCurrentUserDetail().getUsername());
     }
 
     @RequestMapping(value = "notification", method = RequestMethod.POST)
@@ -77,11 +76,6 @@ public class Service {
     @RequestMapping(value = "teachers/{idteacher}", method = RequestMethod.GET, headers = "Accept=application/json")
     public Teacher showTeacherInfor(@PathVariable int idteacher) {
         return td.showInformationTeacher(idteacher);
-    }
-
-    @RequestMapping(value = "notifsloadbypage/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Notification> loadNotifByPage(@PathVariable int page) {
-        return nd.loadNotifPerPage(page);
     }
 
     @RequestMapping(value = "updateToken", method = RequestMethod.PUT)
