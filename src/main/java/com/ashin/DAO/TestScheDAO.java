@@ -10,12 +10,13 @@ import java.util.ArrayList;
  * Created by Khuong on 2017-06-05.
  */
 public class TestScheDAO {
+    private Connect connect = new Connect();
     //method xem danh sach lich thi dua vao ma hoc ky
     public ArrayList<TestSchedule> showTestSchedule(int idSemester, int idClass) {
         ArrayList<TestSchedule> listTestSCh = new ArrayList<TestSchedule>();
         try {
 
-            PreparedStatement ps = Connect.getPreparedStatement("Select * from V_LICHTHI where HOC_KY=? AND V_LICHTHI.MA_LOP=?");
+            PreparedStatement ps = connect.getPreparedStatement("Select * from V_LICHTHI where HOC_KY=? AND V_LICHTHI.MA_LOP=?");
 
             ps.setInt(1, idSemester);
             ps.setInt(2, idClass);
@@ -33,7 +34,7 @@ public class TestScheDAO {
 
                 listTestSCh.add(ts);
             }
-            Connect.close();
+            connect.close();
             return listTestSCh;
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +46,7 @@ public class TestScheDAO {
     public String getNameSubject(int idSubject) {
         try {
             String nameSubject = "";
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * from monhoc where MA_MH=?");
             ps.setInt(1, idSubject);
             ResultSet rs = ps.executeQuery();
@@ -57,7 +58,7 @@ public class TestScheDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Connect.close();
+        connect.close();
         return "";
     }
 

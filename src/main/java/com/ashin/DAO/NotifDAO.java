@@ -6,6 +6,7 @@ package com.ashin.DAO;
 
 import com.ashin.controller.PushNotification;
 import com.ashin.model.Connect;
+import com.ashin.model.GroupNotification;
 import com.ashin.model.Notification;
 
 import java.sql.PreparedStatement;
@@ -16,11 +17,12 @@ import java.util.List;
 
 public class NotifDAO {
     int numberPerPage = 10;
+    private Connect connect = new Connect();
     PushNotification pn = new PushNotification();
 
     public void insert(Notification notif) {
         try {
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)");
             ps.setInt(1, notif.getId());
             ps.setString(2, notif.getSender());
@@ -30,7 +32,29 @@ public class NotifDAO {
             ps.setTimestamp(6, notif.getDate());
             ps.executeUpdate();
             pn.sendNotification(notif);
-            Connect.close();
+            connect.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void insertGroup(GroupNotification grnotif) {
+        try {
+            Notification no = new Notification();
+            int temp = grnotif.getId();
+            for (int i = 0; i <grnotif.getReceiver().size() ; i++) {
+                no = new Notification(grnotif.getSender(),grnotif.getReceiver().get(i),grnotif.getTitle(),grnotif.getNoti(),grnotif.getDate());
+                PreparedStatement ps = connect
+                        .getPreparedStatement("insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)");
+                ps.setInt(1, no.getId());
+                ps.setString(2, no.getSender());
+                ps.setString(3, no.getReceiver());
+                ps.setString(4, no.getTitle());
+                ps.setString(5, no.getNoti());
+                ps.setTimestamp(6, no.getDate());
+                ps.executeUpdate();
+                pn.sendNotification(no);
+                connect.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +63,7 @@ public class NotifDAO {
     public Notification view(int idno) {
         try {
             Notification no = new Notification();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * from THONGBAO where ID_TB=?");
             ps.setInt(1, idno);
             ResultSet rs = ps.executeQuery();
@@ -51,7 +75,7 @@ public class NotifDAO {
                 no.setNoti(rs.getString(5));
                 no.setDate(rs.getTimestamp(6));
             }
-            Connect.close();
+            connect.close();
             return no;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,14 +87,14 @@ public class NotifDAO {
         int result =0;
         try {
             Notification no = new Notification();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("select count(*) from THONGBAO where NGUOINHAN=?");
             ps.setString(1,receiver);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result = rs.getInt(1);
             }
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,14 +105,14 @@ public class NotifDAO {
         int result =0;
         try {
             Notification no = new Notification();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("select count(*) from THONGBAO where NGUOIGUI=?");
             ps.setString(1,sender);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result = rs.getInt(1);
             }
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,11 +120,11 @@ public class NotifDAO {
     }
     public void update(int idNotif, Notification input) {
         try {
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("update THONGBAO set NOI_DUNG=? where ID_TB='" + idNotif + "'");
             ps.setString(1, input.getNoti());
             ps.executeUpdate();
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,13 +145,14 @@ public class NotifDAO {
                 sql = "SELECT * FROM THONGBAO "+" WHERE NGUOINHAN='" + receiver +"'"+" LIMIT " + (temp - page * numPerPage) + "," + numPerPage ;
                 System.out.println(sql);
             }
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
             ps.close();
+            connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,13 +174,14 @@ public class NotifDAO {
                 sql = "SELECT * FROM THONGBAO "+" WHERE NGUOIGUI='" + sender +"'"+" LIMIT " + (temp - page * numPerPage) + "," + numPerPage ;
                 System.out.println(sql);
             }
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
             ps.close();
+            connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,11 +202,11 @@ public class NotifDAO {
     public void updateToken(String idUser, String input) {
         try {
             Notification no = new Notification();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + idUser + "'");
             ps.setString(1, input);
             ps.executeUpdate();
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,17 +214,23 @@ public class NotifDAO {
 
     public static void main(String[] args) {
         NotifDAO no = new NotifDAO();
-        List<Notification> e1 = no.loadNotifPerPageSender(1,3,"ADMIN");
-        for (int i = 0; i < e1.size(); i++) {
-            System.out.println(e1.get(i).getId());
-        }
+        Timestamp t1 = new Timestamp(System.currentTimeMillis());
+//        List<Notification> e1 = no.loadNotifPerPageSender(1,3,"ADMIN");
+//        for (int i = 0; i < e1.size(); i++) {
+//            System.out.println(e1.get(i).getId());
+//        }
+        List<String> li = new ArrayList<>();
+        li.add("HS004");
+        li.add("GV002");
+        GroupNotification gn = new GroupNotification("ADMIN",li,"asoidhaslddfdfgkhsad ","sdfsdfgdfgdfsdaf",t1);
+        no.insertGroup(gn);
 //        List<Notification> e2 = no.loadNotifPerPageReceiver(1,3,"GV002");
 //        for (int i = 0; i < e2.size(); i++) {
 //            System.out.println(e2.get(i).getId());
 //        }
 //        System.out.println(no.sizeList());
 //        System.out.println(no.loadNotifPerPage(1).toString());
-//        Timestamp t1 = new Timestamp(System.currentTimeMillis());
+
 //        Notification n1 = new Notification("Ashin","tretrau","asoidhaslddfdfgkhsad ","sdfsdfgdfgdfsdaf",t1);
 //        Notification n2 = new Notification("Ashin","tretrau","asoidhaslddfdfgkhsad ","moi doi ne",t1);
 //        no.insert(n1);

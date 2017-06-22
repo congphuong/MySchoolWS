@@ -10,17 +10,18 @@ import java.sql.ResultSet;
  * Created by Khuong on 2017-06-05.
  */
 public class AccountDAO {
+    private Connect connect = new Connect();
     public boolean checkAccount(String username, String password) {
         boolean login = false;
         try {
-            PreparedStatement ps = Connect.getPreparedStatement("Select * from taikhoan where username=? and passwd=?");
+            PreparedStatement ps = connect.getPreparedStatement("Select * from taikhoan where username=? and passwd=?");
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 login = true;
             }
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
         }
         return login;
@@ -29,13 +30,13 @@ public class AccountDAO {
     public boolean checkUserExist(String username) {
         boolean check = false;
         try {
-            PreparedStatement ps = Connect.getPreparedStatement("Select username from taikhoan where username=?");
+            PreparedStatement ps = connect.getPreparedStatement("Select username from taikhoan where username=?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 check = true;
             }
-            Connect.close();
+            connect.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -47,7 +48,7 @@ public class AccountDAO {
         MessageResult registerMessage = new MessageResult();
         String sql = "insert into taikhoan(username,passwd,chucvu,machucvu,token) values(?,?,?,?,?)";
         try {
-            PreparedStatement ps = Connect.getPreparedStatement(sql);
+            PreparedStatement ps = connect.getPreparedStatement(sql);
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
             ps.setString(3, account.getRole());
@@ -58,7 +59,7 @@ public class AccountDAO {
                 registerMessage.setMessage("Register Sucess.Wellcome!");
             }
             ps.close();
-            Connect.close();
+            connect.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -67,12 +68,12 @@ public class AccountDAO {
     // method change password
     public void changePasswd(String username, String oldPass, String newPass) {
         try {
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("update TAIKHOAN set passwd=? where USERNAME='" + username + "'");
             ps.setString(1, newPass);
             ps.executeUpdate();
             System.out.println("Succeed !");
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,12 +81,12 @@ public class AccountDAO {
 
     public void updateToken(Account input) {
         try {
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + input.getUsername() + "'");
             ps.setString(1, input.getToken());
             ps.executeUpdate();
 //            System.out.println("Succeed update token !");
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +114,7 @@ public class AccountDAO {
     public User getUserByUsername(String username) {
         User user = null;
         try {
-            PreparedStatement ps = Connect.getPreparedStatement("Select * from taikhoan where username=?");
+            PreparedStatement ps = connect.getPreparedStatement("Select * from taikhoan where username=?");
             ps.setString(1, username);
 
             ResultSet rs = ps.executeQuery();
@@ -125,7 +126,7 @@ public class AccountDAO {
                 user.setChucVu(rs.getString(4));
                 user.setMaChucVu(rs.getInt(5));
             }
-            Connect.close();
+            connect.close();
         } catch (Exception e) {
         }
         return user;

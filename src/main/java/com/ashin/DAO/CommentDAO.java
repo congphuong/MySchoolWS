@@ -11,17 +11,17 @@ import java.util.ArrayList;
  */
 public class CommentDAO {
     public int numPages;
+    private Connect connect = new Connect();
 
     public void setPages(int numPages) {
         this.numPages = numPages;
     }
 
-    public static ArrayList<Comment> getComments() {
+    public ArrayList<Comment> getComments() {
         ArrayList<Comment> cmts = new ArrayList<Comment>();
         if (cmts.size() == 0) {
             try {
-                PreparedStatement ps = Connect
-                        .getPreparedStatement("select * from cmt");
+                PreparedStatement ps = connect.getPreparedStatement("select * from cmt");
 //                String sql = "select * from cmt";
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
@@ -33,7 +33,7 @@ public class CommentDAO {
 
                     cmts.add(new Comment(idCmt, content, d, userID, idTopic));
                 }
-                Connect.close();
+                connect.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,9 +41,9 @@ public class CommentDAO {
         return cmts;
     }
 
-    public static ArrayList<Comment> comments = getComments();
+    public ArrayList<Comment> comments = getComments();
 
-    public static ArrayList<Comment> getCmtOfTopic(int idTopic) {
+    public ArrayList<Comment> getCmtOfTopic(int idTopic) {
         ArrayList<Comment> cmts = new ArrayList<Comment>();
         for (int i = 0; i < comments.size(); i++) {
             if (idTopic == comments.get(i).getIdTopic()) {
@@ -53,10 +53,10 @@ public class CommentDAO {
         return cmts;
     }
 
-    public static int addComment1(Comment c) {
+    public int addComment1(Comment c) {
 //        String sql = "insert into cmt(ID_TOPIC, USERNAME, NOI_DUNG, THOI_GIAN) values(?,?,?,now());";
 //        Connection cnt = Connect.open();;
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("insert into cmt(ID_TOPIC, USERNAME, NOI_DUNG, THOI_GIAN) values(?,?,?,now())");
         int result = 0;
         try {
@@ -69,6 +69,7 @@ public class CommentDAO {
             if (i > 0) {
                 result = 1;
             }
+            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
             result = 0;
@@ -76,7 +77,7 @@ public class CommentDAO {
         return result;
     }
 
-    public static Comment getCmt(int id) {
+    public Comment getCmt(int id) {
         Comment c = null;
         for (Comment cmt : comments) {
             if (cmt.getIdCmt() == id) {
@@ -87,11 +88,11 @@ public class CommentDAO {
         return c;
     }
 
-    public static int editComment(Comment c) throws SQLException {
+    public int editComment(Comment c) throws SQLException {
 //        String sql = "UPDATE CMT SET NOI_DUNG=?, THOI_GIAN= NOW() WHERE CMT.ID_CMT =?";
 //        Connection cnt = Connect.open();;
 
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("UPDATE CMT SET NOI_DUNG=?, THOI_GIAN= NOW() WHERE CMT.ID_CMT =?");
         int tmp = 0;
 //        PreparedStatement stmt = cnt.prepareStatement(sql);
@@ -106,7 +107,7 @@ public class CommentDAO {
         return tmp;
     }
 
-    public static int size(int idTopic) {
+    public int size(int idTopic) {
         ArrayList<Comment> commentsOfTopic = new ArrayList<>();
         for (int i = 0; i < comments.size(); i++) {
             if (idTopic == comments.get(i).getIdTopic()) {
@@ -125,17 +126,18 @@ public class CommentDAO {
         return result;
     }
 
-    public static Comment deleteComment(Comment comment) throws SQLException {
+    public Comment deleteComment(Comment comment) throws SQLException {
         Comment c = null;
 //        Connection cnt = Connect.open();;
 //        Statement stmt = cnt.createStatement();
 //        String sql = "delete from cmt where ID_CMT=" + comment.getIdCmt();
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("delete from cmt where ID_CMT=" + comment.getIdCmt());
         for (int i = 0; i < comments.size(); i++) {
             if (comment.getIdCmt() == comments.get(i).getIdCmt()) {
                 c = comments.remove(i);
                 ps.execute();
+                connect.close();
                 break;
             }
         }
@@ -143,7 +145,7 @@ public class CommentDAO {
     }
 
     public ArrayList<Comment> getCommentPerPage(int idTp, int page) {
-        Connection cnt = Connect.open();
+        Connection cnt = connect.open();
         String sql = "";
 //        String sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = "+ idTp +" LIMIT "+(page-1)*numPages+","+numPages;
         ArrayList<Comment> cmts = new ArrayList<>();
@@ -153,7 +155,7 @@ public class CommentDAO {
         sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = " + idTp + " LIMIT " + (page - 1) * numPages + "," + numPages;
 
         try {
-            PreparedStatement stmt = Connect.getPreparedStatement(sql);
+            PreparedStatement stmt = connect.getPreparedStatement(sql);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 int idCmt = rs.getInt(1);
@@ -164,7 +166,7 @@ public class CommentDAO {
 
                 cmts.add(new Comment(idCmt, content, d, userID, idTopic));
             }
-            Connect.close();
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -181,7 +183,7 @@ public class CommentDAO {
     public ArrayList<Comment> getCommentByTopic(int idTopic) {
         ArrayList<Comment> comments = new ArrayList<>();
         String sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = ?";
-        PreparedStatement ps = Connect.getPreparedStatement(sql);
+        PreparedStatement ps = connect.getPreparedStatement(sql);
 
         try {
             ps.setInt(1, idTopic);
@@ -195,6 +197,7 @@ public class CommentDAO {
 
                 comments.add(new Comment(idCmt, content, d, userID, idTopic));
             }
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

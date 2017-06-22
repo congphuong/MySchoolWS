@@ -21,8 +21,6 @@ public class PushNotification {
     public PushNotification() {
     }
 
-    ;
-
     public static void sendNotification(Notification input)
             throws IOException {
 

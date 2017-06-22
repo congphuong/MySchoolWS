@@ -13,7 +13,6 @@ public class Topic {
     private String topicName;
     private String content;
     private int numCMT;
-    private static ArrayList<Comment> cmts;
 
     public Topic() {
     }
@@ -35,7 +34,6 @@ public class Topic {
         this.topicName = topicName;
         this.content = content;
         this.numCMT = numCMT;
-        cmts = CommentDAO.getComments();
     }
 
     public int getIdTopic() {
@@ -90,22 +88,6 @@ public class Topic {
 
     }
 
-    public void addComment(Comment c) {
-        if (c.getIdTopic() == this.idTopic) {
-            cmts.add(c);
-        }
-    }
-
-    public void deleteComment(Comment c) {
-        for (int i = 0; i < cmts.size(); i++) {
-            if (c.getIdCmt() == cmts.get(i).getIdCmt()) {
-                cmts.remove(i);
-                System.out.println("Done!");
-            } else {
-                System.out.println("Fail!");
-            }
-        }
-    }
 
     public void updateTopic(int idTopic, String userID, Date time, String topicName, String content) {
         if (this.idTopic == idTopic && this.userID == userID) {

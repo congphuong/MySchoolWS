@@ -41,6 +41,11 @@ public class Service {
         nd.insert(input);
         System.out.println("succeed");
     }
+    @RequestMapping(value = "notification/group", method = RequestMethod.POST)
+    public void postGroupNo(@RequestBody GroupNotification input) {
+        nd.insertGroup(input);
+        System.out.println("succeed");
+    }
 
     @RequestMapping(value = "notification/{id}", method = RequestMethod.PUT)
     public void updateNo(@PathVariable int id, @RequestBody Notification newnotif) {

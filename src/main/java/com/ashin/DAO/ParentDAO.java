@@ -11,10 +11,11 @@ import java.util.ArrayList;
  * Created by Khuong on 2017-06-05.
  */
 public class ParentDAO {
+    private Connect connect = new Connect();
     public ArrayList<Parent> showListParents(int idClass) {
         ArrayList<Parent> list = new ArrayList<Parent>();
         try {
-            PreparedStatement ps = Connect.getPreparedStatement("SELECT * FROM V_PHTHEOLOP WHERE V_PHTHEOLOP.MA_LOP = ?");
+            PreparedStatement ps = connect.getPreparedStatement("SELECT * FROM V_PHTHEOLOP WHERE V_PHTHEOLOP.MA_LOP = ?");
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -24,9 +25,10 @@ public class ParentDAO {
                 pa.setSex(rs.getString(3));
                 pa.setDateBorn(rs.getDate(4));
                 pa.setAddress(rs.getString(5));
-                pa.setUser(rs.getString(6));
+                pa.setUsername(rs.getString(6));
                 list.add(pa);
             }
+            connect.close();
             return list;
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,7 +39,7 @@ public class ParentDAO {
     public Parent showInformationParent(int idPa) {
         try {
             Parent pa = new Parent();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * from PHUHUYNH where MA_PH=?");
             ps.setInt(1, idPa);
             ResultSet rs = ps.executeQuery();
@@ -47,8 +49,9 @@ public class ParentDAO {
                 pa.setSex(rs.getString(6));
                 pa.setDateBorn(rs.getDate(3));
                 pa.setAddress(rs.getString(4));
-                pa.setUser(rs.getString(5));
+                pa.setUsername(rs.getString(5));
             }
+            connect.close();
             return pa;
         } catch (Exception e) {
             e.printStackTrace();

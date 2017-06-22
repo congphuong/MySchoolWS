@@ -13,12 +13,13 @@ import java.util.Date;
  */
 public class TopicDAO {
     public int numPages;
+    private Connect connect = new Connect();
 
     public void setPage(int numPages) {
         this.numPages = numPages;
     }
 
-    public static ArrayList<Topic> getTopics() {
+    public ArrayList<Topic> getTopics() {
         ArrayList<Topic> listTopics = new ArrayList<Topic>();
 
         if (listTopics.size() == 0) {
@@ -26,7 +27,7 @@ public class TopicDAO {
 //                Connection cnt = Connect.open();;
 //                Statement stmt = cnt.createStatement();
 //                String sql = "select * from topic";
-                PreparedStatement ps = Connect
+                PreparedStatement ps = connect
                         .getPreparedStatement("select * from topic");
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
@@ -40,21 +41,22 @@ public class TopicDAO {
                     //Comment c = new Comment(idCmt, content, d, userID, idTopic);
                     listTopics.add(new Topic(idTopic, userID, idClass, d, topicName, content, numOfComments));
                 }
+                ps.close();
+                connect.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        Connect.close();
         return listTopics;
     }
 
-    public static ArrayList<Topic> topics = getTopics();
+    public ArrayList<Topic> topics = getTopics();
 
-    public static int createTopic(Topic t) {
+    public int createTopic(Topic t) {
         int result = 0;
 //        String sql = "INSERT INTO TOPIC(USERNAME, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUES (?,now(),?,?,0)";
 //        Connection cnt = Connect.open();;
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("INSERT INTO TOPIC(USERNAME, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUES (?,now(),?,?,0)");
         try {
             int i;
@@ -69,13 +71,13 @@ public class TopicDAO {
             e.printStackTrace();
             result = 0;
         }
-        Connect.close();
+        connect.close();
         return result;
     }
 
-    public static ArrayList<Topic> getTopicsByClass(int idClass) {
+    public ArrayList<Topic> getTopicsByClass(int idClass) {
         String sql = "SELECT * FROM project.topic WHERE topic.MA_LOP=?";
-        PreparedStatement ps = Connect.getPreparedStatement(sql);
+        PreparedStatement ps = connect.getPreparedStatement(sql);
         ArrayList<Topic> topics = new ArrayList<>();
 
         try {
@@ -92,7 +94,7 @@ public class TopicDAO {
                 //Comment c = new Comment(idCmt, content, d, userID, idTopic);
                 topics.add(new Topic(idTopic, userID, idClasss, d, topicName, content, numOfComments));
             }
-
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -101,9 +103,9 @@ public class TopicDAO {
     }
 
 
-    public static int editTopic(Topic tp) {
+    public int editTopic(Topic tp) {
         int tmp = 0;
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("UPDATE TOPIC SET NOI_DUNG=?, CHU_DE=?, THOI_GIAN=NOW() WHERE ID_TOPIC=?");
 
         try {
@@ -116,15 +118,16 @@ public class TopicDAO {
                     break;
                 }
             }
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return tmp;
     }
 
-    public static Topic deleteTopic(Topic tp) {
+    public Topic deleteTopic(Topic tp) {
         Topic topic = null;
-        PreparedStatement ps = Connect
+        PreparedStatement ps = connect
                 .getPreparedStatement("delete from topic where ID_topic=" + tp.getIdTopic());
         try {
             for (int i = 0; i < topics.size(); i++) {
@@ -134,6 +137,7 @@ public class TopicDAO {
                     break;
                 }
             }
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -173,7 +177,6 @@ public class TopicDAO {
 
     public ArrayList<Topic> getTopicPerPage(int idClass, int page) {
         ArrayList<Topic> tps = new ArrayList<>();
-        Connection connect = Connect.open();
         String sql = "";
         if (page > numPageTopics(idClass)) {
             page = numPageTopics(idClass);
@@ -181,7 +184,7 @@ public class TopicDAO {
         sql = "SELECT * FROM TOPIC WHERE TOPIC.MA_LOP = ? LIMIT " + (page - 1) * this.numPages + "," + this.numPages;
 
         try {
-            PreparedStatement ps = connect.prepareStatement(sql);
+            PreparedStatement ps = connect.getPreparedStatement(sql);
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -195,6 +198,7 @@ public class TopicDAO {
 
                 tps.add(new Topic(idTopic, userID, idClasss, d, topicName, content, numOfComments));
             }
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

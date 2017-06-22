@@ -10,11 +10,12 @@ import java.util.ArrayList;
  * Created by Khuong on 2017-06-05.
  */
 public class StudentDAO {
+    private Connect connect = new Connect();
     //method xem thong tin mot hoc sinh dua vao ma hoc sinh
     public Student showInformationStudent(int idStudent) {
         try {
             Student st = new Student();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * from HOCSINH where MA_HS=?");
             ps.setInt(1, idStudent);
             ResultSet rs = ps.executeQuery();
@@ -28,7 +29,7 @@ public class StudentDAO {
                 st.setPhone(rs.getInt(8));
                 st.setUsername(rs.getString(3));
             }
-            Connect.close();
+            connect.close();
             return st;
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,7 +44,7 @@ public class StudentDAO {
     public ArrayList<Student> showListStudent(int idClass) {
         try {
             ArrayList<Student> listStudent = new ArrayList<Student>();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * FROM V_INFOSTD where V_INFOSTD.MA_LOP=? AND V_INFOSTD.USERNAME IS NOT NULL;");
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
@@ -61,7 +62,7 @@ public class StudentDAO {
 
                 listStudent.add(st);
             }
-            Connect.close();
+            connect.close();
             return listStudent;
         } catch (Exception e) {
             e.printStackTrace();

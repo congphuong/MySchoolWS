@@ -10,10 +10,11 @@ import java.sql.ResultSet;
  * Created by anluo on 4/16/2017.
  */
 public class TeacherDAO {
+    private Connect connect = new Connect();
     public Teacher showInformationTeacher(int idTe) {
         try {
             Teacher pa = new Teacher();
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * from GIAOVIEN where MA_GV=?");
             ps.setInt(1, idTe);
             ResultSet rs = ps.executeQuery();
@@ -26,7 +27,7 @@ public class TeacherDAO {
                 pa.setIdSchool(rs.getInt(6));
                 pa.setUsername(rs.getString(7));
             }
-            Connect.close();
+            connect.close();
             return pa;
         } catch (Exception e) {
             e.printStackTrace();

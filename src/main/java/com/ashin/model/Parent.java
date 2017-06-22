@@ -11,14 +11,14 @@ public class Parent {
     String sex;
     Date dateBorn;
     String address;
-    String user;
+    String username;
 
-    public Parent(int idParent, String name, String sex, Date dateBorn, String address, String user) {
+    public Parent(int idParent, String name, String sex, Date dateBorn, String address, String username) {
         this.idParent = idParent;
         this.name = name;
         this.dateBorn = dateBorn;
         this.address = address;
-        this.user = user;
+        this.username = username;
         this.sex = sex;
     }
 
@@ -57,12 +57,12 @@ public class Parent {
         this.address = address;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSex() {

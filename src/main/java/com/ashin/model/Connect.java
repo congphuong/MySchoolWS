@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Connect {
-    static Connection conn = null;
+    Connection conn = null;
 
     static {
         try {
@@ -20,11 +20,11 @@ public class Connect {
         }
     }
 
-    public static Connection open() {
+    public Connection open() {
         try {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost/project?useSSL=false", "root",
-                    ""); // project thay ten database cua tui bay vao, user,pass điền vào
+                    ""); // project thay ten database cua tui bay vao, username,pass điền vào
             return conn;
 
         } catch (SQLException e) {
@@ -33,7 +33,7 @@ public class Connect {
         return null;
     }
 
-    public static PreparedStatement getPreparedStatement(String sql) {
+    public PreparedStatement getPreparedStatement(String sql) {
         try {
             Connection con = open();
             if (con == null || con.isClosed()) {
@@ -46,7 +46,7 @@ public class Connect {
         }
     }
 
-    public static void close() {
+    public void close() {
         try {
             if (conn != null && !conn.isClosed())
                 conn.close();
@@ -55,9 +55,5 @@ public class Connect {
         }
     }
 
-    public static void main(String[] args) {
-        Connect n1 = new Connect();
-        open();
-    }
 }
 

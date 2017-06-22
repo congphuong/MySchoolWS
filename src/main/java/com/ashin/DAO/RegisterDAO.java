@@ -15,10 +15,11 @@ import java.util.ArrayList;
  * Created by trile on 6/20/2017.
  */
 public class RegisterDAO {
-    public static ArrayList<User> getAllsUser() {
+    private Connect connect = new Connect();
+    public ArrayList<User> getAllsUser() {
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM TAIKHOAN";
-        PreparedStatement ps = Connect.getPreparedStatement(sql);
+        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -34,14 +35,14 @@ public class RegisterDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Connect.close();
+        connect.close();
         return users;
     }
 
-    private static ArrayList<VerifyCode> getVerifyCode() {
+    private ArrayList<VerifyCode> getVerifyCode() {
         ArrayList<VerifyCode> verifyCodes = new ArrayList<>();
         String sql = "SELECT * FROM maxacnhan";
-        PreparedStatement ps = Connect.getPreparedStatement(sql);
+        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -54,15 +55,15 @@ public class RegisterDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Connect.close();
+        connect.close();
         return verifyCodes;
     }
 
-    private static ArrayList<User> allUser = getAllsUser();
+    private  ArrayList<User> allUser = getAllsUser();
 
-    private static ArrayList<VerifyCode> verifyCodes = getVerifyCode();
+    private  ArrayList<VerifyCode> verifyCodes = getVerifyCode();
 
-    public static boolean checkUser(UserRegister ur) {
+    public  boolean checkUser(UserRegister ur) {
         boolean tmp = false;
         for (int i = 0; i < allUser.size(); i++) {
             if (!ur.getUserName().equals(allUser.get(i).getUsername())) {
@@ -79,7 +80,7 @@ public class RegisterDAO {
         return tmp;
     }
 
-    public static VerifyCode getVerify(UserRegister userRegister) {
+    public VerifyCode getVerify(UserRegister userRegister) {
         VerifyCode tmp = null;
         for (int i = 0; i < verifyCodes.size(); i++) {
             if (userRegister.getVerifyCode() == verifyCodes.get(i).getVerifyCode()) {
@@ -90,10 +91,10 @@ public class RegisterDAO {
         return tmp;
     }
 
-    public static int addUser(UserRegister ur) {
+    public int addUser(UserRegister ur) {
         BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
         String sql = "CALL THEM_TAIKHOAN(?,?,?,?);";
-        PreparedStatement ps = Connect.getPreparedStatement(sql);
+        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
             if (checkUser(ur)) {
                 VerifyCode verifyCode = getVerify(ur);
@@ -104,38 +105,11 @@ public class RegisterDAO {
                 ps.executeUpdate();
                 return 1;
             }
-            Connect.close();
+            connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
 
-    public static void main(String[] args) {
-        RegisterDAO rd = new RegisterDAO();
-        ArrayList<User> users = RegisterDAO.getAllsUser();
-
-        String password;
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
-        password = b.encode("anhtri");
-
-        UserRegister ur = new UserRegister("HS004", "ASCASC", 113);
-//        UserRegister ur1 = new UserRegister("ADMIN", "ADMIN", 111);
-        UserRegister ur2 = new UserRegister("HS001", "HS001", 117);
-        UserRegister ur3 = new UserRegister("HS002", "HS002", 115);
-        UserRegister ur4 = new UserRegister("HS003", "HS003", 116);
-
-        System.out.println(rd.checkUser(ur));
-
-        System.out.println(rd.getVerify(ur));
-
-        System.out.println(users.size());
-
-        System.out.println(addUser(ur));
-//        System.out.println(addUser(ur1));
-        System.out.println(addUser(ur2));
-        System.out.println(addUser(ur3));
-        System.out.println(addUser(ur4));
-
-    }
 }

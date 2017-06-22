@@ -11,11 +11,12 @@ import java.util.ArrayList;
  * Created by anluo on 4/16/2017.
  */
 public class ScoreDAO {
+    private Connect connect = new Connect();
     public ArrayList<ScoreBoard> showScore(int idStudent) {
         ArrayList<ScoreBoard> scoreBoards = new ArrayList<>();
 
         try {
-            PreparedStatement ps = Connect
+            PreparedStatement ps = connect
                     .getPreparedStatement("SELECT * FROM V_BANGDIEM WHERE V_BANGDIEM.MA_HS= ?");
             ps.setInt(1, idStudent);
 
@@ -34,7 +35,7 @@ public class ScoreDAO {
 
                 scoreBoards.add( new ScoreBoard(idStd, nameStudent, nameClass, nameSubject, mieng, mlphut, mtiet, cuoiKy, tongKet, hocKy));
             }
-            Connect.close();
+            connect.close();
             return scoreBoards;
         } catch (Exception e) {
             e.printStackTrace();
