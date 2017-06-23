@@ -14,12 +14,13 @@ import java.sql.SQLException;
  * Created by Khuong on 2017-06-05.
  */
 public class AccountDAO {
-    private Connect connect = new Connect();
     public boolean checkAccount(String username, String password) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         boolean login = false;
         try {
-            Connection connection= connect.open();
-            PreparedStatement ps = connection.prepareStatement("Select * from taikhoan where username=? and passwd=?");
+            ps = connect.prepareStatement("Select * from taikhoan where username=? and passwd=?");
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
@@ -27,74 +28,122 @@ public class AccountDAO {
                 login = true;
             }
             ps.close();
-            connection.close();
+            connect.close();
         } catch (Exception e) {
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return login;
     }
 
     public boolean checkUserExist(String username) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         boolean check = false;
         try {
-            PreparedStatement ps = connect.getPreparedStatement("Select username from taikhoan where username=?");
+            ps = connect.prepareStatement("Select username from taikhoan where username=?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 check = true;
             }
-            connect.close();
+            rs.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return check;
     }
 
-    //method register
-    public void register(Account account) {
-        MessageResult registerMessage = new MessageResult();
-        String sql = "insert into taikhoan(username,passwd,chucvu,machucvu,token) values(?,?,?,?,?)";
-        try {
-            PreparedStatement ps = connect.getPreparedStatement(sql);
-            ps.setString(1, account.getUsername());
-            ps.setString(2, account.getPassword());
-            ps.setString(3, account.getRole());
-            ps.setString(4, account.getIdrole());
-            ps.setString(5, account.getToken());
-            if (ps.executeUpdate() > 0) {
-                registerMessage.setSuccess(true);
-                registerMessage.setMessage("Register Sucess.Wellcome!");
-            }
-            ps.close();
-            connect.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     // method change password
     public void changePasswd(String username, String oldPass, String newPass) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
-            PreparedStatement ps = connect
-                    .getPreparedStatement("update TAIKHOAN set passwd=? where USERNAME='" + username + "'");
+            connect = (Connection) pool.borrowObject();
+            ps = connect
+                    .prepareStatement("update TAIKHOAN set passwd=? where USERNAME='" + username + "'");
             ps.setString(1, newPass);
             ps.executeUpdate();
-            System.out.println("Succeed !");
-            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void updateToken(Account input) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
-            PreparedStatement ps = connect
-                    .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + input.getUsername() + "'");
+            connect = (Connection) pool.borrowObject();
+            ps = connect
+                    .prepareStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + input.getUsername() + "'");
             ps.setString(1, input.getToken());
             ps.executeUpdate();
 //            System.out.println("Succeed update token !");
             connect.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -102,15 +151,17 @@ public class AccountDAO {
     public static void main(String[] args) {
         //
         AccountDAO accountDAO = new AccountDAO();
-        System.out.println(accountDAO.getUserByUsername("admin"));
+        System.out.println(accountDAO.getUserByUsername("ADMIN"));
+        System.out.println(accountDAO.getUserByUsername("ADMIN"));
+
     }
 
 
     public User getUserByUsername(String username) {
         User user = null;
         Connection connection = null;
-        ObjectPool pool= MyPool.getInstance();
-        System.out.println( pool.getNumActive());
+        ObjectPool pool = MyPool.getInstance();
+        System.out.println(pool.getNumActive());
         System.out.println(pool.getNumIdle());
 
         try {
@@ -135,16 +186,17 @@ public class AccountDAO {
             rs.close();
             ps.close();
         } catch (Exception e) {
-        }finally {
+            e.printStackTrace();
+        } finally {
             try {
-                if(ps!=null)
-                ps.close();
+                if (ps != null)
+                    ps.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             try {
-                if(connection!=null)
-                pool.returnObject(connection);
+                if (connection != null)
+                    pool.returnObject(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (Exception e) {

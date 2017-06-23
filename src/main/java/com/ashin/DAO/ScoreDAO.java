@@ -1,23 +1,28 @@
 package com.ashin.DAO;
 
-import com.ashin.model.Connect;
+import com.ashin.connection.MyPool;
 import com.ashin.model.ScoreBoard;
+import org.apache.commons.pool.ObjectPool;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Created by anluo on 4/16/2017.
  */
 public class ScoreDAO {
-    private Connect connect = new Connect();
     public ArrayList<ScoreBoard> showScore(int idStudent) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         ArrayList<ScoreBoard> scoreBoards = new ArrayList<>();
-
         try {
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * FROM V_BANGDIEM WHERE V_BANGDIEM.MA_HS= ?");
+            connect = (Connection) pool.borrowObject();
+            ps = connect
+                    .prepareStatement("SELECT * FROM V_BANGDIEM WHERE V_BANGDIEM.MA_HS= ?");
             ps.setInt(1, idStudent);
 
             ResultSet rs = ps.executeQuery();
@@ -35,10 +40,25 @@ public class ScoreDAO {
 
                 scoreBoards.add( new ScoreBoard(idStd, nameStudent, nameClass, nameSubject, mieng, mlphut, mtiet, cuoiKy, tongKet, hocKy));
             }
-            connect.close();
+            rs.close();
             return scoreBoards;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return scoreBoards;

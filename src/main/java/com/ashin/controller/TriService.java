@@ -25,13 +25,6 @@ public class TriService {
     private static final String SUCCESS_RESULT = "SUCCESS";
     private static final String FAILURE_RESULT = "FAILURE";
 
-
-    @RequestMapping(value = "comments/{id}", method = RequestMethod.GET)
-    public Comment getComment(@PathVariable int id) {
-        //Comment cmt = commentDAO.getCmt(id);
-        return null;
-    }
-
     @RequestMapping(value = "comments/getCommentByTopic/{id}/{offset}/{numPages}", method = RequestMethod.GET)
     public ArrayList<Comment> getCommentByPage(@PathVariable int id, @PathVariable int offset, @PathVariable int numPages) {
         commentDAO.setPages(numPages);
@@ -64,29 +57,18 @@ public class TriService {
         return result;
     }
 
-    @RequestMapping(value = "topics", method = RequestMethod.GET)
-    public ArrayList<Topic> getAllTopics() {
-        return topicDAO.getTopics();
-    }
-
-    @RequestMapping(value = "topics/getByClass/{id}", method = RequestMethod.GET)
-    public ArrayList<Topic> getTopicOfClass(@PathVariable int id) {
-        ArrayList<Topic> result = topicDAO.getTopicsByClass(id);
+    @RequestMapping(value = "topics/getByClass/{idClass}/{maxid}/{numPages}", method = RequestMethod.GET)
+    public ArrayList<Topic> getTopicPerPage(@PathVariable int idClass,@PathVariable int maxid, @PathVariable int numPages) {
+        ArrayList<Topic> result = topicDAO.getTopicPerPage(idClass, maxid, numPages);
         return result;
     }
 
-    @RequestMapping(value = "topics/getByClass/{id}/{page}/{numPages}", method = RequestMethod.GET)
-    public ArrayList<Topic> getTopicPerPage(@PathVariable int id, @PathVariable int page, @PathVariable int numPages) {
-        topicDAO.setPage(numPages);
-        ArrayList<Topic> result = topicDAO.getTopicPerPage(id, page);
-        return result;
-    }
-
-    @RequestMapping(value = "topics/{id}", method = RequestMethod.GET)
-    public Topic getTopic(@PathVariable int id) {
-        Topic topic = topicDAO.getATopic(id);
+    @RequestMapping(value = "topics/{idClass}/{idTopic}", method = RequestMethod.GET)
+    public Topic getTopic(@PathVariable int idClass, @PathVariable int idTopic) {
+        Topic topic = topicDAO.getATopic(idClass, idTopic);
         return topic;
     }
+
 
     @RequestMapping(value = "topics/createTopic", method = RequestMethod.POST)
     public String createTopic(@RequestBody Topic topic) {
@@ -107,9 +89,12 @@ public class TriService {
     }
 
     @RequestMapping(value = "topics/delTopic", method = RequestMethod.DELETE)
-    public Topic delComment(@RequestBody Topic topic) throws SQLException {
-        Topic result = topicDAO.deleteTopic(topic);
-        return result;
+    public String delComment(@RequestBody Topic topic) throws SQLException {
+        int result = topicDAO.deleteTopic(topic);
+        if (result == 1) {
+            return SUCCESS_RESULT;
+        }
+        return FAILURE_RESULT;
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)

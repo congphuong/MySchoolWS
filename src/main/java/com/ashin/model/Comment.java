@@ -23,6 +23,10 @@ public class Comment {
         this.idTopic = idTopic;
     }
 
+    public Comment(String content, int idTopic){
+        this.content = content;
+        this.idTopic = idTopic;
+    }
 
     public Comment(int idCmt, String content, Timestamp time, String userID, int idTopic) {
         this.idCmt = idCmt;

@@ -7,10 +7,10 @@ import java.util.Date;
  */
 public class Student {
     private int idStudent, idClass, idSchool, phone;
-    private String name, sex, address, username;
+    private String name, sex, address, username, nameClass, nameSchool;
     private Date dateBorn;
 
-    public Student(int idStudent, String name, Date dateBorn, String sex, int idClass, int idSchool, String address, int phone, String username) {
+    public Student(int idStudent, int idClass, int idSchool, int phone, String name, String sex, String address, String username, String nameClass, String nameSchool, Date dateBorn) {
         this.idStudent = idStudent;
         this.idClass = idClass;
         this.idSchool = idSchool;
@@ -19,6 +19,8 @@ public class Student {
         this.sex = sex;
         this.address = address;
         this.username = username;
+        this.nameClass = nameClass;
+        this.nameSchool = nameSchool;
         this.dateBorn = dateBorn;
     }
 
@@ -47,6 +49,22 @@ public class Student {
 
     public void setIdSchool(int idSchool) {
         this.idSchool = idSchool;
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
+    }
+
+    public String getNameSchool() {
+        return nameSchool;
+    }
+
+    public void setNameSchool(String nameSchool) {
+        this.nameSchool = nameSchool;
     }
 
     public int getPhone() {

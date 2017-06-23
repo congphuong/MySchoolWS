@@ -12,7 +12,7 @@ public class MyPool {
     public static ObjectPool pool = initMySqlConnectionPool();
     public static ObjectPool initMySqlConnectionPool() {
         PoolableObjectFactory mySqlPoolableObjectFactory = new ConnectionPool("localhost",
-                3306, "project", "root", "");
+                3306, "myschool1", "root", "1234");
         GenericObjectPool.Config config = new GenericObjectPool.Config();
         config.maxActive = 10;
         config.testOnBorrow = true;

@@ -1,22 +1,29 @@
 package com.ashin.DAO;
 
+import com.ashin.connection.MyPool;
 import com.ashin.model.*;
+import org.apache.commons.pool.ObjectPool;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Created by Khuong on 2017-06-05.
  */
 public class StudentDAO {
-    private Connect connect = new Connect();
     //method xem thong tin mot hoc sinh dua vao ma hoc sinh
     public Student showInformationStudent(int idStudent) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
+            connect = (Connection) pool.borrowObject();
             Student st = new Student();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * from HOCSINH where MA_HS=?");
+            ps = connect
+                    .prepareStatement("SELECT * from HOCSINH where MA_HS=?");
             ps.setInt(1, idStudent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -24,15 +31,30 @@ public class StudentDAO {
                 st.setName(rs.getString(2));
                 st.setDateBorn(rs.getDate(4));
                 st.setSex(rs.getString(5));
-                st.setIdSchool(rs.getInt(6));
+                st.setNameSchool(rs.getString(6));
                 st.setAddress(rs.getString(7));
                 st.setPhone(rs.getInt(8));
                 st.setUsername(rs.getString(3));
             }
-            connect.close();
+            rs.close();
             return st;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -42,10 +64,14 @@ public class StudentDAO {
 
     // method xem danh sach hoc sinh trong mot lop dua vao ma lop
     public ArrayList<Student> showListStudent(int idClass) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
+            connect = (Connection) pool.borrowObject();
             ArrayList<Student> listStudent = new ArrayList<Student>();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * FROM V_INFOSTD where V_INFOSTD.MA_LOP=? AND V_INFOSTD.USERNAME IS NOT NULL;");
+            ps = connect
+                    .prepareStatement("SELECT * FROM V_INFOSTD where V_INFOSTD.MA_LOP=? AND V_INFOSTD.USERNAME IS NOT NULL;");
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -55,17 +81,34 @@ public class StudentDAO {
                 st.setDateBorn(rs.getDate(3));
                 st.setSex(rs.getString(4));
                 st.setIdClass(rs.getInt(5));
-                st.setIdSchool(rs.getInt(6));
-                st.setAddress(rs.getString(7));
-                st.setPhone(rs.getInt(8));
-                st.setUsername(rs.getString(9));
+                st.setNameClass(rs.getString(6));
+                st.setIdSchool(rs.getInt(7));
+                st.setNameSchool(rs.getString(8));
+                st.setAddress(rs.getString(9));
+                st.setPhone(rs.getInt(10));
+                st.setUsername(rs.getString(11));
 
                 listStudent.add(st);
             }
-            connect.close();
+            rs.close();
             return listStudent;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

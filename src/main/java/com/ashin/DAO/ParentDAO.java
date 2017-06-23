@@ -1,21 +1,27 @@
 package com.ashin.DAO;
 
-import com.ashin.model.Connect;
+import com.ashin.connection.MyPool;
 import com.ashin.model.Parent;
+import org.apache.commons.pool.ObjectPool;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Created by Khuong on 2017-06-05.
  */
 public class ParentDAO {
-    private Connect connect = new Connect();
     public ArrayList<Parent> showListParents(int idClass) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         ArrayList<Parent> list = new ArrayList<Parent>();
         try {
-            PreparedStatement ps = connect.getPreparedStatement("SELECT * FROM V_PHTHEOLOP WHERE V_PHTHEOLOP.MA_LOP = ?");
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement("SELECT * FROM V_PHTHEOLOP WHERE V_PHTHEOLOP.MA_LOP = ?");
             ps.setInt(1, idClass);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -28,19 +34,39 @@ public class ParentDAO {
                 pa.setUsername(rs.getString(6));
                 list.add(pa);
             }
-            connect.close();
+            rs.close();
+            ps.close();
             return list;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return list;
     }
 
     public Parent showInformationParent(int idPa) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
             Parent pa = new Parent();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * from PHUHUYNH where MA_PH=?");
+            connect = (Connection) pool.borrowObject();
+            ps = connect
+                    .prepareStatement("SELECT * from PHUHUYNH where MA_PH=?");
             ps.setInt(1, idPa);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -51,10 +77,25 @@ public class ParentDAO {
                 pa.setAddress(rs.getString(4));
                 pa.setUsername(rs.getString(5));
             }
-            connect.close();
+            rs.close();
             return pa;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

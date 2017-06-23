@@ -4,26 +4,29 @@ package com.ashin.DAO;
  * Created by anluo on 6/3/2017.
  */
 
+import com.ashin.connection.MyPool;
 import com.ashin.controller.PushNotification;
-import com.ashin.model.Connect;
 import com.ashin.model.GroupNotification;
 import com.ashin.model.Notification;
+import org.apache.commons.pool.ObjectPool;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotifDAO {
     int numberPerPage = 10;
-    private Connect connect = new Connect();
     PushNotification pn = new PushNotification();
 
     public void insert(Notification notif) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)";
+
         try {
-            PreparedStatement ps = connect
-                    .getPreparedStatement("insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)");
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             ps.setInt(1, notif.getId());
             ps.setString(2, notif.getSender());
             ps.setString(3, notif.getReceiver());
@@ -32,19 +35,39 @@ public class NotifDAO {
             ps.setTimestamp(6, notif.getDate());
             ps.executeUpdate();
             pn.sendNotification(notif);
-            connect.close();
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
     public void insertGroup(GroupNotification grnotif) {
+        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
+            connection = (Connection) pool.borrowObject();
             Notification no = new Notification();
             int temp = grnotif.getId();
-            for (int i = 0; i <grnotif.getReceiver().size() ; i++) {
-                no = new Notification(grnotif.getSender(),grnotif.getReceiver().get(i),grnotif.getTitle(),grnotif.getNoti(),grnotif.getDate());
-                PreparedStatement ps = connect
-                        .getPreparedStatement("insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)");
+            for (int i = 0; i < grnotif.getReceiver().size(); i++) {
+                no = new Notification(grnotif.getSender(), grnotif.getReceiver().get(i), grnotif.getTitle(), grnotif.getNoti(), grnotif.getDate());
+                ps = connection.prepareStatement(sql);
                 ps.setInt(1, no.getId());
                 ps.setString(2, no.getSender());
                 ps.setString(3, no.getReceiver());
@@ -53,18 +76,37 @@ public class NotifDAO {
                 ps.setTimestamp(6, no.getDate());
                 ps.executeUpdate();
                 pn.sendNotification(no);
-                connect.close();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connection != null)
+                    pool.returnObject(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public Notification view(int idno) {
+        String sql = "SELECT * from THONGBAO where ID_TB=?";
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             Notification no = new Notification();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * from THONGBAO where ID_TB=?");
             ps.setInt(1, idno);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -75,140 +117,242 @@ public class NotifDAO {
                 no.setNoti(rs.getString(5));
                 no.setDate(rs.getTimestamp(6));
             }
-            connect.close();
+            ps.close();
             return no;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     public int sizeByReceiver(String receiver) {
-        int result =0;
+        String sql = "select count(*) from THONGBAO where NGUOINHAN=?";
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+        int result = 0;
         try {
             Notification no = new Notification();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("select count(*) from THONGBAO where NGUOINHAN=?");
-            ps.setString(1,receiver);
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
+            ps.setString(1, receiver);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result = rs.getInt(1);
             }
-            connect.close();
+            rs.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }
 
     public int sizeBySender(String sender) {
-        int result =0;
+        String sql = "select count(*) from THONGBAO where NGUOIGUI=?";
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+        int result = 0;
         try {
+            connect = (Connection) pool.borrowObject();
             Notification no = new Notification();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("select count(*) from THONGBAO where NGUOIGUI=?");
-            ps.setString(1,sender);
+            ps = connect.prepareStatement(sql);
+            ps.setString(1, sender);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result = rs.getInt(1);
             }
-            connect.close();
+            rs.close();
+            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }
+
     public void update(int idNotif, Notification input) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+        String sql = "update THONGBAO set NOI_DUNG=? where ID_TB='" + idNotif + "'";
         try {
-            PreparedStatement ps = connect
-                    .getPreparedStatement("update THONGBAO set NOI_DUNG=? where ID_TB='" + idNotif + "'");
+            connect = (Connection) pool.borrowObject();
+            ps = connect
+                    .prepareStatement(sql);
             ps.setString(1, input.getNoti());
             ps.executeUpdate();
-            connect.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public List<Notification> loadNotifPerPageReceiver(int maxid,int numPerPage, String receiver) {
+    public List<Notification> loadNotifPerPageReceiver(int maxid, int numPerPage, String receiver) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+
         List<Notification> ln = new ArrayList<>();
         try {
-            String sql ="";
-            if(maxid==0){
-                sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " order by ID_TB DESC LIMIT 0," + numPerPage ;
-            }else {
+            String sql = "";
+            if (maxid == 0) {
+                sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " order by ID_TB DESC LIMIT 0," + numPerPage;
+            } else {
                 sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " and ID_TB < " + maxid + " order by ID_TB DESC LIMIT 0," + numPerPage;
             }
-            PreparedStatement ps = connect
-                    .getPreparedStatement(sql);
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
             rs.close();
             ps.close();
-            connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         return ln;
     }
-    public List<Notification> loadNotifPerPageSender(int page,int numPerPage,String sender) {
+
+    public List<Notification> loadNotifPerPageSender(int page, int numPerPage, String sender) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+
         try {
             List<Notification> ln = new ArrayList<>();
             NotifDAO nd = new NotifDAO();
             Notification no = new Notification();
             int temp = nd.sizeBySender(sender);
             String sql = "";
-            if (page*numPerPage>temp){return null;}
-            if (page == pageNum(numPerPage,temp)) {
-                sql = "SELECT * FROM THONGBAO"+ " WHERE NGUOIGUI='" + sender +"'" +"LIMIT 0," + temp % numPerPage ;
+            if (page * numPerPage > temp) {
+                return null;
+            }
+            if (page == pageNum(numPerPage, temp)) {
+                sql = "SELECT * FROM THONGBAO" + " WHERE NGUOIGUI='" + sender + "'" + "LIMIT 0," + temp % numPerPage;
                 System.out.println(sql + "tren");
             } else {
-                sql = "SELECT * FROM THONGBAO "+" WHERE NGUOIGUI='" + sender +"'"+" LIMIT " + (temp - page * numPerPage) + "," + numPerPage ;
+                sql = "SELECT * FROM THONGBAO " + " WHERE NGUOIGUI='" + sender + "'" + " LIMIT " + (temp - page * numPerPage) + "," + numPerPage;
                 System.out.println(sql);
             }
-            PreparedStatement ps = connect
-                    .getPreparedStatement(sql);
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
             ps.close();
-            connect.close();
+            rs.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
-    public static int pageNum(int numberPerPage,int input) {
+    public static int pageNum(int numberPerPage, int input) {
         int result = 0;
         result = input / numberPerPage;
         if (input % numberPerPage != 0) {
             result++;
         }
-        System.out.println("Page num"+result);
+        System.out.println("Page num" + result);
         return result;
-    }
-
-    public void updateToken(String idUser, String input) {
-        try {
-            Notification no = new Notification();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("update TAIKHOAN set TOKEN=? where USERNAME='" + idUser + "'");
-            ps.setString(1, input);
-            ps.executeUpdate();
-            connect.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) {
         NotifDAO no = new NotifDAO();
-        System.out.println(no.loadNotifPerPageReceiver(0,5,"HS001"));
+        System.out.println(no.loadNotifPerPageReceiver(0, 5, "HS001"));
     }
 }

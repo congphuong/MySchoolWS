@@ -1,11 +1,13 @@
 package com.ashin.DAO;
 
-import com.ashin.model.Connect;
+import com.ashin.connection.MyPool;
 import com.ashin.model.User;
 import com.ashin.model.UserRegister;
 import com.ashin.model.VerifyCode;
+import org.apache.commons.pool.ObjectPool;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,12 +17,16 @@ import java.util.ArrayList;
  * Created by trile on 6/20/2017.
  */
 public class RegisterDAO {
-    private Connect connect = new Connect();
     public ArrayList<User> getAllsUser() {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM TAIKHOAN";
-        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int userID = rs.getInt(1);
@@ -31,19 +37,40 @@ public class RegisterDAO {
 
                 users.add(new User(userID, userName, password, chucVu, maChucVu));
             }
-
+            rs.close();
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        connect.close();
         return users;
     }
 
     private ArrayList<VerifyCode> getVerifyCode() {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         ArrayList<VerifyCode> verifyCodes = new ArrayList<>();
         String sql = "SELECT * FROM maxacnhan";
-        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int verifyCode = rs.getInt(1);
@@ -52,18 +79,35 @@ public class RegisterDAO {
 
                 verifyCodes.add(new VerifyCode(verifyCode, idRole, nameRole));
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        connect.close();
         return verifyCodes;
     }
 
-    private  ArrayList<User> allUser = getAllsUser();
+    private ArrayList<User> allUser = getAllsUser();
 
-    private  ArrayList<VerifyCode> verifyCodes = getVerifyCode();
+    private ArrayList<VerifyCode> verifyCodes = getVerifyCode();
 
-    public  boolean checkUser(UserRegister ur) {
+    public boolean checkUser(UserRegister ur) {
         boolean tmp = false;
         for (int i = 0; i < allUser.size(); i++) {
             if (!ur.getUserName().equals(allUser.get(i).getUsername())) {
@@ -92,10 +136,14 @@ public class RegisterDAO {
     }
 
     public int addUser(UserRegister ur) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
         String sql = "CALL THEM_TAIKHOAN(?,?,?,?);";
-        PreparedStatement ps = connect.getPreparedStatement(sql);
         try {
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement(sql);
             if (checkUser(ur)) {
                 VerifyCode verifyCode = getVerify(ur);
                 ps.setString(1, ur.getUserName());
@@ -108,6 +156,23 @@ public class RegisterDAO {
             connect.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return 0;
     }

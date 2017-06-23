@@ -1,21 +1,27 @@
 package com.ashin.DAO;
 
+import com.ashin.connection.MyPool;
 import com.ashin.model.*;
+import org.apache.commons.pool.ObjectPool;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Created by Khuong on 2017-06-05.
  */
 public class ScheDAO {
-    private Connect connect = new Connect();
     public ArrayList<Schedule> showSchedule(int idClass, int semester, int weekday) {
+        Connection connect = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
         try {
+            connect = (Connection) pool.borrowObject();
             ArrayList<Schedule> list = new ArrayList<Schedule>();
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * from V_TKB where V_TKB.MA_LOP=? and V_TKB.HOC_KY=? and V_TKB.THU=?");
+            ps = connect.prepareStatement("SELECT * from V_TKB where V_TKB.MA_LOP=? and V_TKB.HOC_KY=? and V_TKB.THU=?");
             ps.setInt(1, idClass);
             ps.setInt(2, semester);
             ps.setInt(3, weekday);
@@ -32,32 +38,28 @@ public class ScheDAO {
                 sc.setLesson(rs.getInt(8));
                 list.add(sc);
             }
-            connect.close();
+            rs.close();
             return list;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
-    }
-
-    //method lay ten mon hoc
-    public String getNameSubject(int idSubject) {
-        try {
-            String nameSubject = "";
-            PreparedStatement ps = connect
-                    .getPreparedStatement("SELECT * from monhoc where MA_MH=?");
-            ps.setInt(1, idSubject);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                nameSubject = rs.getString(2);
-            }
-            connect.close();
-            return nameSubject;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     //test
