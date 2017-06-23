@@ -1,10 +1,14 @@
 package com.ashin.DAO;
 
+import com.ashin.connection.MyPool;
 import com.ashin.model.*;
+import org.apache.commons.pool.ObjectPool;
 
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Khuong on 2017-06-05.
@@ -14,14 +18,16 @@ public class AccountDAO {
     public boolean checkAccount(String username, String password) {
         boolean login = false;
         try {
-            PreparedStatement ps = connect.getPreparedStatement("Select * from taikhoan where username=? and passwd=?");
+            Connection connection= connect.open();
+            PreparedStatement ps = connection.prepareStatement("Select * from taikhoan where username=? and passwd=?");
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 login = true;
             }
-            connect.close();
+            ps.close();
+            connection.close();
         } catch (Exception e) {
         }
         return login;
@@ -96,25 +102,25 @@ public class AccountDAO {
     public static void main(String[] args) {
         //
         AccountDAO accountDAO = new AccountDAO();
-        MessageResult registerResult = new MessageResult();
-//        accountDAO.register(new Account("anh3","1234","ph","135","akda"));
-        System.out.println();
-
-//
-//         boolean success = accountDAO.checkAccount("khuong","4321");
-//          System.out.println(success);
-//
-//
-        System.out.println(accountDAO.checkAccount("anh3", "1234"));
-        accountDAO.changePasswd("ly", "1234", "4321");
-//        System.out.println(accountDAO.checkAccount("khuong","4321"));
+        System.out.println(accountDAO.getUserByUsername("admin"));
     }
 
 
     public User getUserByUsername(String username) {
         User user = null;
+        Connection connection = null;
+        ObjectPool pool= MyPool.getInstance();
+        System.out.println( pool.getNumActive());
+        System.out.println(pool.getNumIdle());
+
         try {
-            PreparedStatement ps = connect.getPreparedStatement("Select * from taikhoan where username=?");
+            connection = (Connection) pool.borrowObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("Select * from taikhoan where username=?");
             ps.setString(1, username);
 
             ResultSet rs = ps.executeQuery();
@@ -126,8 +132,24 @@ public class AccountDAO {
                 user.setChucVu(rs.getString(4));
                 user.setMaChucVu(rs.getInt(5));
             }
-            connect.close();
+            rs.close();
+            ps.close();
         } catch (Exception e) {
+        }finally {
+            try {
+                if(ps!=null)
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(connection!=null)
+                pool.returnObject(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }

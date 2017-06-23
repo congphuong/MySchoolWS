@@ -7,6 +7,7 @@ import com.ashin.DAO.CommentDAO;
 import com.ashin.model.Topic;
 import com.ashin.DAO.TopicDAO;
 import com.ashin.model.UserRegister;
+import com.ashin.security.JwtGetUserDetail;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -24,32 +25,23 @@ public class TriService {
     private static final String SUCCESS_RESULT = "SUCCESS";
     private static final String FAILURE_RESULT = "FAILURE";
 
-    @RequestMapping(value = "comments", method = RequestMethod.GET)
-    public ArrayList<Comment> getAllComment() {
-        return commentDAO.getComments();
-    }
 
     @RequestMapping(value = "comments/{id}", method = RequestMethod.GET)
     public Comment getComment(@PathVariable int id) {
-        Comment cmt = commentDAO.getCmt(id);
-        return cmt;
+        //Comment cmt = commentDAO.getCmt(id);
+        return null;
     }
 
-    @RequestMapping(value = "comments/getCommentByTopic/{id}", method = RequestMethod.GET)
-    public ArrayList<Comment> getCommentByTopic(@PathVariable int id) {
-        ArrayList<Comment> results = commentDAO.getCommentByTopic(id);
-        return results;
-    }
-
-    @RequestMapping(value = "comments/getCommentByTopic/{id}/{page}/{numPages}", method = RequestMethod.GET)
-    public ArrayList<Comment> getCommentByPage(@PathVariable int id, @PathVariable int page, @PathVariable int numPages) {
+    @RequestMapping(value = "comments/getCommentByTopic/{id}/{offset}/{numPages}", method = RequestMethod.GET)
+    public ArrayList<Comment> getCommentByPage(@PathVariable int id, @PathVariable int offset, @PathVariable int numPages) {
         commentDAO.setPages(numPages);
-        ArrayList<Comment> comments = commentDAO.getCommentPerPage(id, page);
+        ArrayList<Comment> comments = commentDAO.getCommentPerOffset(id, offset);
         return comments;
     }
 
     @RequestMapping(value = "comments/addComment", method = RequestMethod.POST)
     public String addComment(@RequestBody Comment cmt) {
+        cmt.setUserID(JwtGetUserDetail.getCurrentUserDetail().getUsername());
         int result = commentDAO.addComment1(cmt);
         if (result == 1) {
             return SUCCESS_RESULT;

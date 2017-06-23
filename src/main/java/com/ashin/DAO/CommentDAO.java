@@ -1,7 +1,9 @@
 package com.ashin.DAO;
 
+import com.ashin.connection.MyPool;
 import com.ashin.model.Comment;
 import com.ashin.model.Connect;
+import org.apache.commons.pool.ObjectPool;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,47 +19,11 @@ public class CommentDAO {
         this.numPages = numPages;
     }
 
-    public ArrayList<Comment> getComments() {
-        ArrayList<Comment> cmts = new ArrayList<Comment>();
-        if (cmts.size() == 0) {
-            try {
-                PreparedStatement ps = connect.getPreparedStatement("select * from cmt");
-//                String sql = "select * from cmt";
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    int idCmt = rs.getInt(1);
-                    int idTopic = rs.getInt(2);
-                    String userID = rs.getString(3);
-                    String content = rs.getString(4);
-                    Timestamp d = rs.getTimestamp(5);
-
-                    cmts.add(new Comment(idCmt, content, d, userID, idTopic));
-                }
-                connect.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return cmts;
-    }
-
-    public ArrayList<Comment> comments = getComments();
-
-    public ArrayList<Comment> getCmtOfTopic(int idTopic) {
-        ArrayList<Comment> cmts = new ArrayList<Comment>();
-        for (int i = 0; i < comments.size(); i++) {
-            if (idTopic == comments.get(i).getIdTopic()) {
-                cmts.add(comments.get(i));
-            }
-        }
-        return cmts;
-    }
-
     public int addComment1(Comment c) {
 //        String sql = "insert into cmt(ID_TOPIC, USERNAME, NOI_DUNG, THOI_GIAN) values(?,?,?,now());";
 //        Connection cnt = Connect.open();;
         PreparedStatement ps = connect
-                .getPreparedStatement("insert into cmt(ID_TOPIC, USERNAME, NOI_DUNG, THOI_GIAN) values(?,?,?,now())");
+                .getPreparedStatement("insert into cmt(ID_TOPIC, USERNAME, NOI_DUNG) values(?,?,?)");
         int result = 0;
         try {
             int i;
@@ -69,23 +35,13 @@ public class CommentDAO {
             if (i > 0) {
                 result = 1;
             }
+            ps.close();
             connect.close();
         } catch (Exception e) {
             e.printStackTrace();
             result = 0;
         }
         return result;
-    }
-
-    public Comment getCmt(int id) {
-        Comment c = null;
-        for (Comment cmt : comments) {
-            if (cmt.getIdCmt() == id) {
-                c = cmt;
-                break;
-            }
-        }
-        return c;
     }
 
     public int editComment(Comment c) throws SQLException {
@@ -98,30 +54,36 @@ public class CommentDAO {
 //        PreparedStatement stmt = cnt.prepareStatement(sql);
         ps.setString(1, c.getContent());
         ps.setInt(2, c.getIdCmt());
-        for (int i = 0; i < comments.size(); i++) {
-            if (c.getIdCmt() == comments.get(i).getIdCmt() && c.getUserID().equals(comments.get(i).getUserID())) {
+
                 tmp = ps.executeUpdate();
-                break;
-            }
-        }
+
+
+
         return tmp;
     }
 
-    public int size(int idTopic) {
-        ArrayList<Comment> commentsOfTopic = new ArrayList<>();
-        for (int i = 0; i < comments.size(); i++) {
-            if (idTopic == comments.get(i).getIdTopic()) {
-                commentsOfTopic.add(comments.get(i));
+    public int size(int idTopic, Connection connection) {
+        int result =0;
+        PreparedStatement ps = null;
+        try {
+            ps = connection
+                    .prepareStatement("select count(*) from CMT where ID_TOPIC=?");
+            ps.setInt(1,idTopic);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getInt(1);
             }
-        }
-        return commentsOfTopic.size();
-    }
-
-    public int pageNum(int idTopic) {
-        int result = 0;
-        result = size(idTopic) / this.numPages;
-        if (size(idTopic) % numPages != 0) {
-            result++;
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if(ps!=null)
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }
@@ -133,29 +95,38 @@ public class CommentDAO {
 //        String sql = "delete from cmt where ID_CMT=" + comment.getIdCmt();
         PreparedStatement ps = connect
                 .getPreparedStatement("delete from cmt where ID_CMT=" + comment.getIdCmt());
-        for (int i = 0; i < comments.size(); i++) {
-            if (comment.getIdCmt() == comments.get(i).getIdCmt()) {
-                c = comments.remove(i);
+
                 ps.execute();
                 connect.close();
-                break;
-            }
-        }
         return c;
     }
 
-    public ArrayList<Comment> getCommentPerPage(int idTp, int page) {
-        Connection cnt = connect.open();
+    public ArrayList<Comment> getCommentPerOffset(int idTp, int offset) {
+        Connection cnt = null;
+        ObjectPool pool = MyPool.getInstance();
+        try {
+            cnt = (Connection) pool.borrowObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PreparedStatement stmt = null;
         String sql = "";
 //        String sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = "+ idTp +" LIMIT "+(page-1)*numPages+","+numPages;
         ArrayList<Comment> cmts = new ArrayList<>();
-        if (page > pageNum(idTp)) {
-            page = pageNum(idTp);
+
+        if (offset==size(idTp, cnt)){
+            try {
+                pool.returnObject(cnt);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return cmts;
         }
-        sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = " + idTp + " LIMIT " + (page - 1) * numPages + "," + numPages;
+
+        sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = " + idTp + " LIMIT " + offset + "," + numPages;
 
         try {
-            PreparedStatement stmt = connect.getPreparedStatement(sql);
+            stmt = cnt.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 int idCmt = rs.getInt(1);
@@ -163,67 +134,37 @@ public class CommentDAO {
                 String userID = rs.getString(3);
                 String content = rs.getString(4);
                 Timestamp d = rs.getTimestamp(5);
-
                 cmts.add(new Comment(idCmt, content, d, userID, idTopic));
             }
-            connect.close();
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if(stmt!=null)
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(cnt!=null)
+                pool.returnObject(cnt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return cmts;
-    }
-//    public ArrayList<Comment> getPageComment(int page){
-//        ArrayList<Comment> comments = new ArrayList<>();
-//        if(page < pageNum()) {
-//            comments = getCommentPerPage(((size()/numPages) - page)*numPages);
-//        }
-//        return comments;
-//    }
-
-    public ArrayList<Comment> getCommentByTopic(int idTopic) {
-        ArrayList<Comment> comments = new ArrayList<>();
-        String sql = "SELECT * FROM CMT WHERE CMT.ID_TOPIC = ?";
-        PreparedStatement ps = connect.getPreparedStatement(sql);
-
-        try {
-            ps.setInt(1, idTopic);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int idCmt = rs.getInt(1);
-                int idTopicc = rs.getInt(2);
-                String userID = rs.getString(3);
-                String content = rs.getString(4);
-                Timestamp d = rs.getTimestamp(5);
-
-                comments.add(new Comment(idCmt, content, d, userID, idTopic));
-            }
-            connect.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return comments;
     }
 
     public static void main(String[] args) throws SQLException {
         CommentDAO c = new CommentDAO();
-//        Comment cmt = c.deleteComment(2);
-
-//        Comment c2 = new Comment(12, "Alo cai con c4aa24aaax", Calendar.getInstance().getTime(), "HS002", 4);
-//        System.out.println(c.addComment(c2));
-
-//        System.out.println(cmt.toString());
-//        Comment cmt = c.getCmt(3);
-        // Comment cmt = c.deleteComment();
-        //  System.out.println(cmt.toString());
-//        int a = c.addComment(c2);
-
-        //  boolean a = c.editComment(c2);
-//        System.out.println(c.getComments().get(1));
-//        System.out.println(a);
-        System.out.println(c.size(3));
-//        System.out.println(size());
-//        System.out.println(pageNum(3));
-//        System.out.println(c.getCommentPerPage(5).size());
+        c.setPages(5);
+        System.out.println(c.getCommentPerOffset(1,5));
+        Connection connection = c.connect.open();
+        connection.close();
+        System.out.println(connection.isClosed());
     }
 }

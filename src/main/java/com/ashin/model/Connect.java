@@ -10,24 +10,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Connect {
-    Connection conn = null;
+    private Connection conn;
 
-    static {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public Connection open() {
         try {
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/project?useSSL=false", "root",
-                    ""); // project thay ten database cua tui bay vao, username,pass điền vào
-            return conn;
+            Class.forName("com.mysql.jdbc.Driver");
+            try {
+                Connection conn = DriverManager.getConnection(
+                        "jdbc:mysql://localhost/project", "root",
+                        "");
+                return conn;
 
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

@@ -130,20 +130,14 @@ public class NotifDAO {
         }
     }
 
-    public List<Notification> loadNotifPerPageReceiver(int page,int numPerPage,String receiver) {
+    public List<Notification> loadNotifPerPageReceiver(int maxid,int numPerPage, String receiver) {
+        List<Notification> ln = new ArrayList<>();
         try {
-            List<Notification> ln = new ArrayList<>();
-            NotifDAO nd = new NotifDAO();
-            Notification no = new Notification();
-            int temp = nd.sizeByReceiver(receiver);
-            String sql = "";
-            if (page*numPerPage>temp){return null;}
-            if (page == pageNum(numPerPage,temp)) {
-                sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " LIMIT 0," + temp % numPerPage ;
-                System.out.println(sql + "tren");
-            } else {
-                sql = "SELECT * FROM THONGBAO "+" WHERE NGUOINHAN='" + receiver +"'"+" LIMIT " + (temp - page * numPerPage) + "," + numPerPage ;
-                System.out.println(sql);
+            String sql ="";
+            if(maxid==0){
+                sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " order by ID_TB DESC LIMIT 0," + numPerPage ;
+            }else {
+                sql = "SELECT * FROM THONGBAO WHERE NGUOINHAN='" + receiver + "'" + " and ID_TB < " + maxid + " order by ID_TB DESC LIMIT 0," + numPerPage;
             }
             PreparedStatement ps = connect
                     .getPreparedStatement(sql);
@@ -151,13 +145,14 @@ public class NotifDAO {
             while (rs.next()) {
                 ln.add(new Notification(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6)));
             }
+            rs.close();
             ps.close();
             connect.close();
             return ln;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return ln;
     }
     public List<Notification> loadNotifPerPageSender(int page,int numPerPage,String sender) {
         try {
@@ -214,28 +209,6 @@ public class NotifDAO {
 
     public static void main(String[] args) {
         NotifDAO no = new NotifDAO();
-        Timestamp t1 = new Timestamp(System.currentTimeMillis());
-//        List<Notification> e1 = no.loadNotifPerPageSender(1,3,"ADMIN");
-//        for (int i = 0; i < e1.size(); i++) {
-//            System.out.println(e1.get(i).getId());
-//        }
-        List<String> li = new ArrayList<>();
-        li.add("HS004");
-        li.add("GV002");
-        GroupNotification gn = new GroupNotification("ADMIN",li,"asoidhaslddfdfgkhsad ","sdfsdfgdfgdfsdaf",t1);
-        no.insertGroup(gn);
-//        List<Notification> e2 = no.loadNotifPerPageReceiver(1,3,"GV002");
-//        for (int i = 0; i < e2.size(); i++) {
-//            System.out.println(e2.get(i).getId());
-//        }
-//        System.out.println(no.sizeList());
-//        System.out.println(no.loadNotifPerPage(1).toString());
-
-//        Notification n1 = new Notification("Ashin","tretrau","asoidhaslddfdfgkhsad ","sdfsdfgdfgdfsdaf",t1);
-//        Notification n2 = new Notification("Ashin","tretrau","asoidhaslddfdfgkhsad ","moi doi ne",t1);
-//        no.insert(n1);
-//        System.out.println(no.viewAll().size());
-//        no.update(3,n2);
-//        no.updateToken("Ashin","130396");
+        System.out.println(no.loadNotifPerPageReceiver(0,5,"HS001"));
     }
 }

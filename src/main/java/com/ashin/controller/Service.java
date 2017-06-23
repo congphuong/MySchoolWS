@@ -27,9 +27,9 @@ public class Service {
         return nd.view(id);
     }
 
-    @RequestMapping(value = "notifications/receivers/{page}&{numPerPage}",method = RequestMethod.GET,headers ="Accept=application/json")
-    public List<Notification> loadNotifByReceiver(@PathVariable int page,@PathVariable int numPerPage) {
-        return nd.loadNotifPerPageReceiver(page,numPerPage,JwtGetUserDetail.getCurrentUserDetail().getUsername());
+    @RequestMapping(value = "notifications/receivers/{maxid}&{numPerPage}",method = RequestMethod.GET,headers ="Accept=application/json")
+    public List<Notification> loadNotifByReceiver(@PathVariable int maxid,@PathVariable int numPerPage) {
+        return nd.loadNotifPerPageReceiver(maxid,numPerPage,JwtGetUserDetail.getCurrentUserDetail().getUsername());
     }
     @RequestMapping(value = "notifications/senders/{page}&{numPerPage}",method = RequestMethod.GET,headers ="Accept=application/json")
     public List<Notification> loadNotifBySender(@PathVariable int page,@PathVariable int numPerPage) {
