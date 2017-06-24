@@ -2,6 +2,7 @@ package com.ashin.DAO;
 
 import com.ashin.connection.MyPool;
 import com.ashin.model.Parent;
+import com.ashin.model.Student;
 import org.apache.commons.pool.ObjectPool;
 
 import java.sql.Connection;
@@ -62,22 +63,27 @@ public class ParentDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
+        ArrayList<Student> students = new ArrayList<>();
         try {
             Parent pa = new Parent();
             connect = (Connection) pool.borrowObject();
             ps = connect
-                    .prepareStatement("SELECT * from PHUHUYNH where MA_PH=?");
+                    .prepareStatement("SELECT * from V_INFOPARENTS where V_INFOPARENTS.MA_PH=?");
             ps.setInt(1, idPa);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 pa.setIdParent(rs.getInt(1));
                 pa.setName(rs.getString(2));
-                pa.setSex(rs.getString(6));
                 pa.setDateBorn(rs.getDate(3));
                 pa.setAddress(rs.getString(4));
                 pa.setUsername(rs.getString(5));
+                pa.setSex(rs.getString(6));
+
+                Student student = StudentDAO.showInformationStudent(rs.getInt(7));
+                students.add(student);
             }
             rs.close();
+            pa.setStudents(students);
             return pa;
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +105,6 @@ public class ParentDAO {
         }
         return null;
     }
-
 
     public static void main(String[] args) {
         ParentDAO pd = new ParentDAO();
