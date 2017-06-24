@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class StudentDAO {
     //method xem thong tin mot hoc sinh dua vao ma hoc sinh
-    public Student showInformationStudent(int idStudent) {
+    public static Student showInformationStudent(int idStudent) {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
@@ -23,18 +23,21 @@ public class StudentDAO {
             connect = (Connection) pool.borrowObject();
             Student st = new Student();
             ps = connect
-                    .prepareStatement("SELECT * from HOCSINH where MA_HS=?");
+                    .prepareStatement("SELECT * FROM V_INFOSTD WHERE V_INFOSTD.MA_HS = ?");
             ps.setInt(1, idStudent);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 st.setIdStudent(rs.getInt(1));
                 st.setName(rs.getString(2));
-                st.setDateBorn(rs.getDate(4));
-                st.setSex(rs.getString(5));
-                st.setNameSchool(rs.getString(6));
-                st.setAddress(rs.getString(7));
-                st.setPhone(rs.getInt(8));
-                st.setUsername(rs.getString(3));
+                st.setDateBorn(rs.getDate(3));
+                st.setSex(rs.getString(4));
+                st.setIdClass(rs.getInt(5));
+                st.setNameClass(rs.getString(6));
+                st.setIdSchool(rs.getInt(7));
+                st.setNameSchool(rs.getString(8));
+                st.setAddress(rs.getString(9));
+                st.setPhone(rs.getInt(10));
+                st.setUsername(rs.getString(11));
             }
             rs.close();
             return st;
@@ -58,10 +61,6 @@ public class StudentDAO {
         }
         return null;
     }
-
-    //method lay ten lop
-
-
     // method xem danh sach hoc sinh trong mot lop dua vao ma lop
     public ArrayList<Student> showListStudent(int idClass) {
         Connection connect = null;

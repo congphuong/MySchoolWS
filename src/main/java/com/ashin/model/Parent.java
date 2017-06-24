@@ -1,17 +1,19 @@
 package com.ashin.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Khuong on 2017-06-05.
  */
 public class Parent {
-    int idParent;
-    String name;
-    String sex;
-    Date dateBorn;
-    String address;
-    String username;
+    private int idParent;
+    private String name;
+    private String sex;
+    private Date dateBorn;
+    private String address;
+    private String username;
+    private ArrayList<Student> students;
 
     public Parent(int idParent, String name, String sex, Date dateBorn, String address, String username) {
         this.idParent = idParent;
@@ -23,6 +25,14 @@ public class Parent {
     }
 
     public Parent() {
+    }
+
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
     }
 
     public int getIdParent() {
