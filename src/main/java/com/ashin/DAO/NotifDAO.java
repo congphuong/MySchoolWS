@@ -22,7 +22,7 @@ public class NotifDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)";
+        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,N?,N?,?)";
 
         try {
             connect = (Connection) pool.borrowObject();
@@ -57,7 +57,7 @@ public class NotifDAO {
     }
 
     public void insertGroup(GroupNotification grnotif) {
-        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,?,?,?)";
+        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,N?,N?,?)";
         Connection connection = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
@@ -219,7 +219,7 @@ public class NotifDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        String sql = "update THONGBAO set NOI_DUNG=? where ID_TB='" + idNotif + "'";
+        String sql = "update THONGBAO set NOI_DUNG=N? where ID_TB='" + idNotif + "'";
         try {
             connect = (Connection) pool.borrowObject();
             ps = connect

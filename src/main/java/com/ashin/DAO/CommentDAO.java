@@ -20,7 +20,7 @@ public class CommentDAO {
     public int addComment1(Comment c) {
         Connection connect = null;
         PreparedStatement ps = null;
-        String sql = "insert into cmt(ID_TOPIC,USERNAME,NOI_DUNG) values(?,?,?)";
+        String sql = "insert into cmt(ID_TOPIC,USERNAME,NOI_DUNG) values(?,?,N?)";
         ObjectPool pool = MyPool.getInstance();
         int result = 0;
         try {
@@ -61,7 +61,7 @@ public class CommentDAO {
     public int editComment(Comment c) throws SQLException {
         Connection connect = null;
         PreparedStatement ps = null;
-        String sql = "UPDATE CMT SET NOI_DUNG=?, THOI_GIAN= NOW() WHERE CMT.ID_CMT =?";
+        String sql = "UPDATE CMT SET NOI_DUNG=N?, THOI_GIAN= NOW() WHERE CMT.ID_CMT =?";
         ObjectPool pool = MyPool.getInstance();
         int tmp = 0;
         try {

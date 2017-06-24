@@ -107,13 +107,6 @@ public class ParentDAO {
     }
 
     public static void main(String[] args) {
-        ParentDAO pd = new ParentDAO();
-        ArrayList<Parent> list = new ArrayList<Parent>();
-        list = pd.showListParents(1);
-        for (Parent parent : list) {
-            System.out.println(parent.getIdParent() + " " + parent.getName() + " "
-                    + parent.getSex() + " " + parent.getDateBorn() + " " + parent.getAddress());
-        }
 
     }
 

@@ -18,7 +18,7 @@ public class TopicDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        String sql = "INSERT INTO TOPIC(USERNAME, MA_LOP, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUE(?,?,NOW(),?,?,0);";
+        String sql = "INSERT INTO TOPIC(USERNAME, MA_LOP, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUE(?,?,NOW(),N?,N?,0);";
         int result = 0;
         try {
             int i;
@@ -58,7 +58,7 @@ public class TopicDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        String sql = "UPDATE TOPIC SET NOI_DUNG=?, CHU_DE=?, THOI_GIAN=NOW() WHERE ID_TOPIC=? AND MA_LOP =?";
+        String sql = "UPDATE TOPIC SET NOI_DUNG=N?, CHU_DE=N?, THOI_GIAN=NOW() WHERE ID_TOPIC=? AND MA_LOP =?";
         int tmp = 0;
 
         try {

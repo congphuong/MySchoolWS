@@ -1,26 +1,45 @@
 package com.ashin.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Khuong on 2017-06-05.
  */
 public class Teacher {
-    int idTeacher, idSchool;
-    String name, sex, address, username;
-    Date dateBorn;
+    private int idTeacher;
+    private String name, sex, address, username, nameClass, nameSchool;
+    private Date dateBorn;
+    private ArrayList<Student> students;
 
-    public Teacher(int idTeacher, String name, String sex, String address, Date dateBorn, int idSchool, String username) {
+    public Teacher(int idTeacher, String name, String sex, String address, Date dateBorn, String nameSchool, String username, String nameClass) {
         this.idTeacher = idTeacher;
         this.name = name;
         this.sex = sex;
         this.address = address;
         this.username = username;
         this.dateBorn = dateBorn;
-        this.idSchool = idSchool;
+        this.nameSchool = nameSchool;
+        this.nameClass = nameClass;
     }
 
     public Teacher() {
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
+    }
+
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
     }
 
     public int getIdTeacher() {
@@ -71,12 +90,12 @@ public class Teacher {
         this.dateBorn = dateBorn;
     }
 
-    public int getIdSchool() {
-        return idSchool;
+    public String getNameSchool() {
+        return nameSchool;
     }
 
-    public void setIdSchool(int idSchool) {
-        this.idSchool = idSchool;
+    public void setNameSchool(String nameSchool) {
+        this.nameSchool = nameSchool;
     }
 
 }

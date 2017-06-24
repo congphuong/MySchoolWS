@@ -1,6 +1,7 @@
 package com.ashin.DAO;
 
 import com.ashin.connection.MyPool;
+import com.ashin.model.Student;
 import com.ashin.model.Teacher;
 import org.apache.commons.pool.ObjectPool;
 
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by anluo on 4/16/2017.
@@ -17,24 +19,29 @@ public class TeacherDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
+        ArrayList<Student> students = new ArrayList<>();
         try {
             connect = (Connection) pool.borrowObject();
-            Teacher pa = new Teacher();
+            Teacher teacher = new Teacher();
             ps = connect
-                    .prepareStatement("SELECT * from GIAOVIEN where MA_GV=?");
+                    .prepareStatement("SELECT * FROM V_INFOTEACHER where V_INFOTEACHER.MA_GV=?");
             ps.setInt(1, idTe);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                pa.setIdTeacher(rs.getInt(1));
-                pa.setName(rs.getString(2));
-                pa.setSex(rs.getString(3));
-                pa.setAddress(rs.getString(4));
-                pa.setDateBorn(rs.getDate(5));
-                pa.setIdSchool(rs.getInt(6));
-                pa.setUsername(rs.getString(7));
+                teacher.setIdTeacher(rs.getInt(1));
+                teacher.setName(rs.getString(2));
+                teacher.setSex(rs.getString(3));
+                teacher.setAddress(rs.getString(4));
+                teacher.setDateBorn(rs.getDate(5));
+                teacher.setNameSchool(rs.getString(6));
+                teacher.setUsername(rs.getString(7));
+
+                Student student = StudentDAO.showInformationStudent(rs.getInt(9));
+                students.add(student);
             }
+            teacher.setStudents(students);
             rs.close();
-            return pa;
+            return teacher;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -57,7 +64,6 @@ public class TeacherDAO {
     }
 
     public static void main(String[] args) {
-        TeacherDAO td = new TeacherDAO();
-        System.out.println(td.showInformationTeacher(1).getName());
+
     }
 }
