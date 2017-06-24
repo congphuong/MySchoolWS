@@ -36,8 +36,8 @@ public class TeacherDAO {
                 teacher.setNameSchool(rs.getString(6));
                 teacher.setUsername(rs.getString(7));
 
-                Student student = StudentDAO.showInformationStudent(rs.getInt(9));
-                students.add(student);
+                Student std = StudentDAO.showInformationStudent(rs.getInt(9));
+                students.add(std);
             }
             teacher.setStudents(students);
             rs.close();
