@@ -144,7 +144,7 @@ public class TopicDAO {
                 int idTopicc = rs.getInt(1);
                 String username = rs.getString(2);
                 int idClasss = rs.getInt(3);
-                Date dateTime = rs.getDate(4);
+                Date dateTime = rs.getTimestamp(4);
                 String topicName = rs.getString(5);
                 String context = rs.getString(6);
                 int numCmts = rs.getInt(7);
@@ -217,7 +217,7 @@ public class TopicDAO {
                 int idTopic = rs.getInt(1);
                 String userID = rs.getString(2);
                 int idClasss = rs.getInt(3);
-                Date d = rs.getDate(4);
+                Date d = rs.getTimestamp(4);
                 String topicName = rs.getString(5);
                 String content = rs.getString(6);
                 int numOfComments = rs.getInt(7);

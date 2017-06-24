@@ -89,6 +89,14 @@ public class Topic {
     }
 
 
+    public int getNumCMT() {
+        return numCMT;
+    }
+
+    public void setNumCMT(int numCMT) {
+        this.numCMT = numCMT;
+    }
+
     public void updateTopic(int idTopic, String userID, Date time, String topicName, String content) {
         if (this.idTopic == idTopic && this.userID == userID) {
             this.time = time;
