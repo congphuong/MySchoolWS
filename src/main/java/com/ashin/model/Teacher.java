@@ -7,12 +7,12 @@ import java.util.Date;
  * Created by Khuong on 2017-06-05.
  */
 public class Teacher {
-    private int idTeacher;
+    private int idTeacher, idClass;
     private String name, sex, address, username, nameClass, nameSchool;
     private Date dateBorn;
     private ArrayList<Student> students;
 
-    public Teacher(int idTeacher, String name, String sex, String address, Date dateBorn, String nameSchool, String username, String nameClass) {
+    public Teacher(int idTeacher, String name, String sex, String address, Date dateBorn, String nameSchool, String username, int idClass, String nameClass) {
         this.idTeacher = idTeacher;
         this.name = name;
         this.sex = sex;
@@ -20,10 +20,19 @@ public class Teacher {
         this.username = username;
         this.dateBorn = dateBorn;
         this.nameSchool = nameSchool;
+        this.idClass = idClass;
         this.nameClass = nameClass;
     }
 
     public Teacher() {
+    }
+
+    public int getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(int idClass) {
+        this.idClass = idClass;
     }
 
     public String getNameClass() {
@@ -32,14 +41,6 @@ public class Teacher {
 
     public void setNameClass(String nameClass) {
         this.nameClass = nameClass;
-    }
-
-    public ArrayList<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(ArrayList<Student> students) {
-        this.students = students;
     }
 
     public int getIdTeacher() {

@@ -19,7 +19,6 @@ public class TeacherDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        ArrayList<Student> students = new ArrayList<>();
         try {
             connect = (Connection) pool.borrowObject();
             Teacher teacher = new Teacher();
@@ -35,11 +34,9 @@ public class TeacherDAO {
                 teacher.setDateBorn(rs.getDate(5));
                 teacher.setNameSchool(rs.getString(6));
                 teacher.setUsername(rs.getString(7));
-
-                Student std = StudentDAO.showInformationStudent(rs.getInt(9));
-                students.add(std);
+                teacher.setNameClass(rs.getString(8));
+                teacher.setIdClass(rs.getInt(9));
             }
-            teacher.setStudents(students);
             rs.close();
             return teacher;
         } catch (Exception e) {
