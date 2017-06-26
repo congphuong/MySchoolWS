@@ -3,6 +3,7 @@ package com.ashin.DAO;
 import com.ashin.connection.MyPool;
 import com.ashin.model.Student;
 import com.ashin.model.Teacher;
+import com.ashin.model.Topic;
 import org.apache.commons.pool.ObjectPool;
 
 import java.sql.Connection;
@@ -19,6 +20,7 @@ public class TeacherDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
+        ArrayList<Topic> topics = new ArrayList<>();
         try {
             connect = (Connection) pool.borrowObject();
             Teacher teacher = new Teacher();
@@ -36,8 +38,12 @@ public class TeacherDAO {
                 teacher.setUsername(rs.getString(7));
                 teacher.setNameClass(rs.getString(8));
                 teacher.setIdClass(rs.getInt(9));
+
+                Topic topic = TopicDAO.getATopic(rs.getInt(9), rs.getInt(10));
+                topics.add(topic);
             }
             rs.close();
+            teacher.setTopics(topics);
             return teacher;
         } catch (Exception e) {
             e.printStackTrace();

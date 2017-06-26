@@ -154,7 +154,7 @@ CREATE TABLE `giaovien` (
 
 LOCK TABLES `giaovien` WRITE;
 /*!40000 ALTER TABLE `giaovien` DISABLE KEYS */;
-INSERT INTO `giaovien` VALUES (1,'CO GIAO THAO','NU ','TP HCM','1993-02-01 17:00:00',1,NULL),(2,'THAY GIAO THAO','NAM','TP HCM','1989-03-22 17:00:00',1,'GV002'),(3,'GIAO VIEN 2','NAM ','HA NOI','1991-04-03 17:00:00',1,NULL),(4,'GIAO VIEN 3','NU','TP HCM ','1991-03-01 17:00:00',1,NULL),(5,'GIAO VIEN 4','NAM ','QUANG NGAI','1990-01-01 17:00:00',1,NULL);
+INSERT INTO `giaovien` VALUES (1,'CO GIAO THAO','NU ','TP HCM','1993-02-01 17:00:00',1,'admin2'),(2,'THAY GIAO THAO','NAM','TP HCM','1989-03-22 17:00:00',1,'GV002'),(3,'GIAO VIEN 2','NAM ','HA NOI','1991-04-03 17:00:00',1,NULL),(4,'GIAO VIEN 3','NU','TP HCM ','1991-03-01 17:00:00',1,NULL),(5,'GIAO VIEN 4','NAM ','QUANG NGAI','1990-01-01 17:00:00',1,NULL);
 /*!40000 ALTER TABLE `giaovien` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -406,7 +406,7 @@ CREATE TABLE `taikhoan` (
   `TOKEN` varchar(400) DEFAULT NULL,
   PRIMARY KEY (`USERID`),
   UNIQUE KEY `USERNAME` (`USERNAME`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,7 +415,7 @@ CREATE TABLE `taikhoan` (
 
 LOCK TABLES `taikhoan` WRITE;
 /*!40000 ALTER TABLE `taikhoan` DISABLE KEYS */;
-INSERT INTO `taikhoan` VALUES (1,'HS004','$2a$10$6EQ1CrT6kH./UtjkSKpX9e3eOCxdu8rhQ3Wwx1hLjQNYxL/8dFlMO','HOCSINH',5,NULL),(2,'ADMIN','$2a$10$AR5eTjmfk8ydCnd/RgLRjODXNDKKLVc64gAWLpeg7Y1G8e4SKMyK.','GIAOVIEN',1,NULL),(3,'PH001','$2a$10$fFhhGLyff0litXOjYAgh4eKVVMy/rM51jdcAhzBLOJPk17Q3PbD7y','PHUHUYNH',2,NULL),(4,'PH002','$2a$10$T/tvc2AY0rv7qXp1wxSJ8.FJAn0HN9t.U0NqQEGzqZ6NKsfitaJ7.','PHUHUYNH',2,NULL),(5,'PH003','$2a$10$8eq009yEbizqkhvf7dUKiOm/yY8UnlNJbq7HWfQhuhhFQhQN0aYxS','PHUHUYNH',2,NULL),(6,'GV002','GV002','GIAOVIEN',2,NULL),(8,'HS001','$2a$10$D7HMvWpu35tXNU6e7YrODOzVq6DqmPvCQZD7NDT6oJ9Bi0FBYtjGu','HOCSINH',8,NULL),(9,'HS002','$2a$10$LhFYAJ7XijgHGVPfqdLqT.Zx11VLsaqP0sg1tCTyfOey4WYrwDZau','HOCSINH',6,NULL),(10,'HS003','$2a$10$RcDDv0one8rJPG.gZ/itGeeHhFNtFtzn2IWj9661zwRgSjDDYLWpm','HOCSINH',7,NULL);
+INSERT INTO `taikhoan` VALUES (1,'HS004','$2a$10$6EQ1CrT6kH./UtjkSKpX9e3eOCxdu8rhQ3Wwx1hLjQNYxL/8dFlMO','HOCSINH',5,NULL),(2,'ADMIN','$2a$10$AR5eTjmfk8ydCnd/RgLRjODXNDKKLVc64gAWLpeg7Y1G8e4SKMyK.','GIAOVIEN',1,NULL),(3,'PH001','$2a$10$fFhhGLyff0litXOjYAgh4eKVVMy/rM51jdcAhzBLOJPk17Q3PbD7y','PHUHUYNH',2,NULL),(4,'PH002','$2a$10$T/tvc2AY0rv7qXp1wxSJ8.FJAn0HN9t.U0NqQEGzqZ6NKsfitaJ7.','PHUHUYNH',2,NULL),(5,'PH003','$2a$10$8eq009yEbizqkhvf7dUKiOm/yY8UnlNJbq7HWfQhuhhFQhQN0aYxS','PHUHUYNH',2,NULL),(6,'GV002','GV002','GIAOVIEN',2,NULL),(8,'HS001','$2a$10$D7HMvWpu35tXNU6e7YrODOzVq6DqmPvCQZD7NDT6oJ9Bi0FBYtjGu','HOCSINH',8,NULL),(9,'HS002','$2a$10$LhFYAJ7XijgHGVPfqdLqT.Zx11VLsaqP0sg1tCTyfOey4WYrwDZau','HOCSINH',6,NULL),(10,'HS003','$2a$10$RcDDv0one8rJPG.gZ/itGeeHhFNtFtzn2IWj9661zwRgSjDDYLWpm','HOCSINH',7,NULL),(11,'admin2','$2a$10$aSR1dAqElYqU05IibkD2bui33zIltZ/RXXQGJ6/tvBNiwDHEFps7m','GIAOVIEN',1,NULL);
 /*!40000 ALTER TABLE `taikhoan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -620,7 +620,8 @@ SET character_set_client = utf8;
                                           1 AS `TEN_TRUONG`,
                                           1 AS `USERNAME`,
                                           1 AS `TEN_LOP`,
-                                          1 AS `MA_LOP`*/;
+                                          1 AS `MA_LOP`,
+                                          1 AS `ID_TOPIC`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -777,7 +778,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
   /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-  /*!50001 VIEW `v_infoteacher` AS select `gv`.`MA_GV` AS `MA_GV`,`gv`.`TEN_GV` AS `TEN_GV`,`gv`.`GIOI_TINH` AS `GIOI_TINH`,`gv`.`QUE_QUAN` AS `QUE_QUAN`,`gv`.`NGAY_SINH` AS `NGAY_SINH`,`truong`.`TEN_TRUONG` AS `TEN_TRUONG`,`gv`.`USERNAME` AS `USERNAME`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lop`.`MA_LOP` AS `MA_LOP` from ((`giaovien` `gv` join `lop` on((`gv`.`MA_GV` = `lop`.`MA_GV`))) join `truong` on((`truong`.`MA_TRUONG` = `gv`.`MA_TRUONG`))) */;
+  /*!50001 VIEW `v_infoteacher` AS select `gv`.`MA_GV` AS `MA_GV`,`gv`.`TEN_GV` AS `TEN_GV`,`gv`.`GIOI_TINH` AS `GIOI_TINH`,`gv`.`QUE_QUAN` AS `QUE_QUAN`,`gv`.`NGAY_SINH` AS `NGAY_SINH`,`truong`.`TEN_TRUONG` AS `TEN_TRUONG`,`gv`.`USERNAME` AS `USERNAME`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lop`.`MA_LOP` AS `MA_LOP`,`topic`.`ID_TOPIC` AS `ID_TOPIC` from (((`giaovien` `gv` join `lop` on((`gv`.`MA_GV` = `lop`.`MA_GV`))) join `truong` on((`truong`.`MA_TRUONG` = `gv`.`MA_TRUONG`))) join `topic` on((`topic`.`MA_LOP` = `lop`.`MA_LOP`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -845,4 +846,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-25 11:35:28
+-- Dump completed on 2017-06-26 17:33:06

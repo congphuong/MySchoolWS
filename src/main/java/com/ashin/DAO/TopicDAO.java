@@ -128,7 +128,7 @@ public class TopicDAO {
         return result;
     }
 
-    public Topic getATopic(int idClass, int idTopic) {
+    public static Topic getATopic(int idClass, int idTopic) {
         Topic topic = null;
         Connection connect = null;
         PreparedStatement ps = null;

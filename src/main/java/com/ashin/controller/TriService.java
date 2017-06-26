@@ -106,8 +106,4 @@ public class TriService {
         return FAILURE_RESULT;
     }
 
-    @RequestMapping(value = "user/test", method = RequestMethod.GET)
-    public UserRegister getUserRegister(){
-        return new UserRegister("HS004", "ASCASC", 111);
-    }
 }
