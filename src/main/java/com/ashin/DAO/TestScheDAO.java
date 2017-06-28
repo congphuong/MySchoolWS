@@ -37,7 +37,8 @@ public class TestScheDAO {
                 ts.setTestDay(rs.getTimestamp(6));
                 ts.setStartLesson(rs.getInt(7));
                 ts.setTestTime(rs.getInt(8));
-
+                ts.setIdTeacherWatch(rs.getInt(9));
+                ts.setNameTeacher(rs.getString(10));
                 listTestSCh.add(ts);
             }
             rs.close();
