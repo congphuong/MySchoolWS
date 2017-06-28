@@ -101,7 +101,7 @@ CREATE TABLE `cmt` (
 
 LOCK TABLES `cmt` WRITE;
 /*!40000 ALTER TABLE `cmt` DISABLE KEYS */;
-INSERT INTO `cmt` VALUES (17,1,'HS001','BLA BLE BLO','2017-06-21 14:04:00'),(18,1,'HS002','BLA BLE BLO AAAAAAA1','2017-06-23 17:22:47'),(19,1,'HS001','BLA BLE BLO 2','2017-06-21 14:04:00'),(20,1,'HS002','BLA BLE BLO 3','2017-06-21 14:04:00'),(21,1,'HS001','BLA BLE BLO 4','2017-06-21 14:04:00'),(22,1,'HS002','BLA BLE BLO D','2017-06-21 14:04:00'),(23,1,'HS001','BLA BLE BLO','2017-06-21 14:04:00'),(24,1,'HS002','BLA BLE BLO','2017-06-21 14:04:00'),(25,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(26,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(27,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(28,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(29,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(30,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(31,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(32,1,'HS001','BLA BLE BL11111O','2017-06-22 16:47:17'),(33,2,'HS001','BLA BLE BLO','2017-06-22 17:34:23'),(34,4,'HS001','BLA BLE BLO','2017-06-22 17:34:44'),(35,1,'HS001','SDAASDASDASDAS','2017-06-23 13:07:00'),(36,1,'PH001','BLA BLE BLO AAAAAAA222222','2017-06-23 17:35:27'),(37,4,'PH001','BLA BLE BLO','2017-06-24 08:35:30'),(38,4,'PH001','BLA BLE BLO bé này bé nọ ','2017-06-24 08:37:46');
+INSERT INTO `cmt` VALUES (17,1,'HS001','BLA BLE BLO','2017-06-21 14:04:00'),(18,1,'HS002','BLA BLE BLO AAAAAAA1','2017-06-23 17:22:47'),(19,1,'HS001','BLA BLE BLO 2','2017-06-21 14:04:00'),(20,1,'HS002','BLA BLE BLO 3','2017-06-21 14:04:00'),(21,1,'HS001','BLA BLE BLO 4','2017-06-21 14:04:00'),(22,1,'HS002','BLA BLE BLO D','2017-06-21 14:04:00'),(23,1,'HS001','BLA BLE BLO','2017-06-21 14:04:00'),(24,1,'HS002','BLA BLE BLO','2017-06-21 14:04:00'),(25,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(26,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(27,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(28,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(29,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(30,1,'HS002','BLA BLE BLO','2017-06-21 14:04:01'),(31,1,'HS001','BLA BLE BLO','2017-06-21 14:04:01'),(32,1,'HS001','BLA BLE BL11111O','2017-06-22 16:47:17'),(33,2,'HS001','BLA BLE BLO','2017-06-22 17:34:23'),(34,4,'HS001','BLA BLE BLO','2017-06-22 17:34:44'),(35,1,'HS001','SDAASDASDASDAS','2017-06-23 13:07:00'),(36,1,'PH001','BLA BLE BLO AAAAAAA222222','2017-06-23 17:35:27'),(37,4,'PH001','BLA BLE BLO','2017-06-24 08:35:30'),(38,4,'PH001','BLA BLE BLO bé này bé nọ thế kỷ hai mốt','2017-06-26 10:36:04');
 /*!40000 ALTER TABLE `cmt` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -233,6 +233,7 @@ CREATE TABLE `lichthi` (
   `NGAY_THI` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `TIET_BAT_DAU` int(11) DEFAULT NULL,
   `THOI_GIAN_THI` int(11) DEFAULT NULL,
+  `MA_GV_CT` int(11) DEFAULT NULL,
   KEY `FK_MAMH` (`MA_MH`),
   KEY `FK_LLT` (`MA_LOP`),
   CONSTRAINT `FK_LLT` FOREIGN KEY (`MA_LOP`) REFERENCES `lop` (`MA_LOP`),
@@ -246,7 +247,7 @@ CREATE TABLE `lichthi` (
 
 LOCK TABLES `lichthi` WRITE;
 /*!40000 ALTER TABLE `lichthi` DISABLE KEYS */;
-INSERT INTO `lichthi` VALUES (1,1,1,'2017-09-08 17:00:00',1,90),(1,2,1,'2017-06-01 17:00:00',3,120),(1,3,1,'2017-06-02 17:00:00',5,120),(1,4,1,'2017-05-31 17:00:00',2,60),(1,1,2,'2017-04-03 17:00:00',1,90),(1,2,2,'2017-05-04 17:00:00',1,120),(1,3,2,'2017-05-05 17:00:00',3,120);
+INSERT INTO `lichthi` VALUES (1,1,1,'2017-06-28 17:13:39',1,90,1),(1,2,1,'2017-06-28 17:15:06',3,120,2),(1,3,1,'2017-06-28 17:15:06',5,120,4),(1,4,1,'2017-06-28 17:15:07',2,60,5),(1,1,2,'2017-06-28 17:13:39',1,90,1),(1,2,2,'2017-06-28 17:15:06',1,120,2),(1,3,2,'2017-06-28 17:15:06',3,120,4);
 /*!40000 ALTER TABLE `lichthi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -620,8 +621,7 @@ SET character_set_client = utf8;
                                           1 AS `TEN_TRUONG`,
                                           1 AS `USERNAME`,
                                           1 AS `TEN_LOP`,
-                                          1 AS `MA_LOP`,
-                                          1 AS `ID_TOPIC`*/;
+                                          1 AS `MA_LOP`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -640,7 +640,9 @@ SET character_set_client = utf8;
                                       1 AS `TEN_LOP`,
                                       1 AS `NGAY_THI`,
                                       1 AS `TIET_BAT_DAU`,
-                                      1 AS `THOI_GIAN_THI`*/;
+                                      1 AS `THOI_GIAN_THI`,
+                                      1 AS `MA_GV_CT`,
+                                      1 AS `TEN_GV`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -778,7 +780,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
   /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-  /*!50001 VIEW `v_infoteacher` AS select `gv`.`MA_GV` AS `MA_GV`,`gv`.`TEN_GV` AS `TEN_GV`,`gv`.`GIOI_TINH` AS `GIOI_TINH`,`gv`.`QUE_QUAN` AS `QUE_QUAN`,`gv`.`NGAY_SINH` AS `NGAY_SINH`,`truong`.`TEN_TRUONG` AS `TEN_TRUONG`,`gv`.`USERNAME` AS `USERNAME`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lop`.`MA_LOP` AS `MA_LOP`,`topic`.`ID_TOPIC` AS `ID_TOPIC` from (((`giaovien` `gv` join `lop` on((`gv`.`MA_GV` = `lop`.`MA_GV`))) join `truong` on((`truong`.`MA_TRUONG` = `gv`.`MA_TRUONG`))) join `topic` on((`topic`.`MA_LOP` = `lop`.`MA_LOP`))) */;
+  /*!50001 VIEW `v_infoteacher` AS select `gv`.`MA_GV` AS `MA_GV`,`gv`.`TEN_GV` AS `TEN_GV`,`gv`.`GIOI_TINH` AS `GIOI_TINH`,`gv`.`QUE_QUAN` AS `QUE_QUAN`,`gv`.`NGAY_SINH` AS `NGAY_SINH`,`truong`.`TEN_TRUONG` AS `TEN_TRUONG`,`gv`.`USERNAME` AS `USERNAME`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lop`.`MA_LOP` AS `MA_LOP` from (((`giaovien` `gv` join `lop` on((`gv`.`MA_GV` = `lop`.`MA_GV`))) join `truong` on((`truong`.`MA_TRUONG` = `gv`.`MA_TRUONG`))) join `topic` on((`topic`.`MA_LOP` = `lop`.`MA_LOP`))) group by `gv`.`MA_GV` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -796,7 +798,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
   /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-  /*!50001 VIEW `v_lichthi` AS select `lt`.`HOC_KY` AS `HOC_KY`,`lt`.`MA_MH` AS `MA_MH`,`mh`.`TEN_MH` AS `TEN_MH`,`lt`.`MA_LOP` AS `MA_LOP`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lt`.`NGAY_THI` AS `NGAY_THI`,`lt`.`TIET_BAT_DAU` AS `TIET_BAT_DAU`,`lt`.`THOI_GIAN_THI` AS `THOI_GIAN_THI` from ((`lichthi` `lt` join `lop` on((`lt`.`MA_LOP` = `lop`.`MA_LOP`))) join `monhoc` `mh` on((`lt`.`MA_MH` = `mh`.`MA_MH`))) */;
+  /*!50001 VIEW `v_lichthi` AS select `lt`.`HOC_KY` AS `HOC_KY`,`lt`.`MA_MH` AS `MA_MH`,`mh`.`TEN_MH` AS `TEN_MH`,`lt`.`MA_LOP` AS `MA_LOP`,`lop`.`TEN_LOP` AS `TEN_LOP`,`lt`.`NGAY_THI` AS `NGAY_THI`,`lt`.`TIET_BAT_DAU` AS `TIET_BAT_DAU`,`lt`.`THOI_GIAN_THI` AS `THOI_GIAN_THI`,`lt`.`MA_GV_CT` AS `MA_GV_CT`,`gv`.`TEN_GV` AS `TEN_GV` from (((`lichthi` `lt` join `lop` on((`lt`.`MA_LOP` = `lop`.`MA_LOP`))) join `monhoc` `mh` on((`lt`.`MA_MH` = `mh`.`MA_MH`))) join `giaovien` `gv` on((`lt`.`MA_GV_CT` = `gv`.`MA_GV`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -846,4 +848,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-26 17:33:06
+-- Dump completed on 2017-06-29  0:40:57
