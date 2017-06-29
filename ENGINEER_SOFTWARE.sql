@@ -561,7 +561,8 @@ SET character_set_client = utf8;
                                        1 AS `MTIET`,
                                        1 AS `CUOIKY`,
                                        1 AS `TONGKET`,
-                                       1 AS `HOC_KY`*/;
+                                       1 AS `HOC_KY`,
+                                       1 AS `MA_LOP`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -726,7 +727,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
   /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-  /*!50001 VIEW `v_bangdiem` AS select `hs`.`TEN_HS` AS `TEN_HS`,`hs`.`MA_HS` AS `MA_HS`,`l`.`TEN_LOP` AS `TEN_LOP`,`mh`.`TEN_MH` AS `TEN_MH`,`ct`.`MIENG` AS `MIENG`,`ct`.`MLPHUT` AS `MLPHUT`,`ct`.`MTIET` AS `MTIET`,`ct`.`CUOIKY` AS `CUOIKY`,`ct`.`TONGKET` AS `TONGKET`,`ct`.`HOC_KY` AS `HOC_KY` from (((`hocsinh` `hs` join `chitietbangdiem` `ct` on((`hs`.`MA_HS` = `ct`.`MA_HS`))) join `monhoc` `mh` on((`ct`.`MA_MH` = `mh`.`MA_MH`))) join `lop` `l` on((`ct`.`MA_LOP` = `l`.`MA_LOP`))) */;
+  /*!50001 VIEW `v_bangdiem` AS select `hs`.`TEN_HS` AS `TEN_HS`,`hs`.`MA_HS` AS `MA_HS`,`l`.`TEN_LOP` AS `TEN_LOP`,`mh`.`TEN_MH` AS `TEN_MH`,`ct`.`MIENG` AS `MIENG`,`ct`.`MLPHUT` AS `MLPHUT`,`ct`.`MTIET` AS `MTIET`,`ct`.`CUOIKY` AS `CUOIKY`,`ct`.`TONGKET` AS `TONGKET`,`ct`.`HOC_KY` AS `HOC_KY`,`l`.`MA_LOP` AS `MA_LOP` from (((`hocsinh` `hs` join `chitietbangdiem` `ct` on((`hs`.`MA_HS` = `ct`.`MA_HS`))) join `monhoc` `mh` on((`ct`.`MA_MH` = `mh`.`MA_MH`))) join `lop` `l` on((`ct`.`MA_LOP` = `l`.`MA_LOP`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -848,4 +849,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-29  0:40:57
+-- Dump completed on 2017-06-29 17:01:27
