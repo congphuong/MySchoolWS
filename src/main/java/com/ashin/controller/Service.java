@@ -53,9 +53,9 @@ public class Service {
         System.out.println("succeed");
     }
 
-    @RequestMapping(value = "getScoreBoard/{idStudent}", method = RequestMethod.GET, headers = "Accept=application/json")
-    public ArrayList<ScoreBoard> showScore(@PathVariable int idStudent) {
-        return sd.showScore(idStudent);
+    @RequestMapping(value = "getScoreBoard/{idStudent}/{idClass}/{semester}", method = RequestMethod.GET, headers = "Accept=application/json")
+    public ArrayList<ScoreBoard> showScore(@PathVariable int idStudent, @PathVariable int idClass, @PathVariable int semester) {
+        return sd.showScore(idStudent, idClass, semester);
     }
 
     @RequestMapping(value = "parents/{idparent}", method = RequestMethod.GET, headers = "Accept=application/json")

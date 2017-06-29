@@ -4,18 +4,16 @@ package com.ashin.model;
  * Created by anluo on 4/16/2017.
  */
 public class ScoreBoard {
-    private final int HE_SO_1 = 1;
-    private final int HE_SO_2 = 2;
-    private final int HE_SO_3 = 3;
 
     private int idStudent;
+    private int idClass;
     private String nameStudent;
     private String nameClass;
     private String nameSubject;
     private double mieng, mlphut, mtiet, cuoiky, tongket;
     private int term;
 
-    public ScoreBoard(int idStudent, String nameStudent, String nameClass, String nameSubject, double mieng, double mlphut, double mtiet, double cuoiky, int term) {
+    public ScoreBoard(int idStudent, int idClass, String nameStudent, String nameClass, String nameSubject, double mieng, double mlphut, double mtiet, double cuoiky, int term) {
         this.idStudent = idStudent;
         this.nameStudent = nameStudent;
         this.nameClass = nameClass;
@@ -25,6 +23,7 @@ public class ScoreBoard {
         this.mtiet = mtiet;
         this.cuoiky = cuoiky;
         this.term = term;
+        this.idClass = idClass;
     }
 
     public ScoreBoard(int idStudent, String nameStudent, String nameClass, String nameSubject, double mieng, double mlphut, double mtiet, double cuoiky, double tongket, int term) {
@@ -123,10 +122,6 @@ public class ScoreBoard {
         this.term = term;
     }
 
-    public double diemTongKet() {
-        double result = (this.mieng * HE_SO_1 + this.mlphut * HE_SO_1 + this.mtiet * HE_SO_2 + this.cuoiky * HE_SO_3) / (HE_SO_1 * 2 + HE_SO_2 + HE_SO_3);
-        return result;
-    }
 
     @Override
     public String toString() {

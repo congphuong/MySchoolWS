@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by anluo on 4/16/2017.
  */
 public class ScoreDAO {
-    public ArrayList<ScoreBoard> showScore(int idStudent) {
+    public ArrayList<ScoreBoard> showScore(int idStudent, int idClass, int semester) {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
@@ -22,8 +22,10 @@ public class ScoreDAO {
         try {
             connect = (Connection) pool.borrowObject();
             ps = connect
-                    .prepareStatement("SELECT * FROM V_BANGDIEM WHERE V_BANGDIEM.MA_HS= ?");
+                    .prepareStatement("SELECT * FROM V_BANGDIEM WHERE V_BANGDIEM.MA_HS= ? AND V_BANGDIEM.HOC_KY=? AND V_BANGDIEM.MA_LOP=?");
             ps.setInt(1, idStudent);
+            ps.setInt(2, semester);
+            ps.setInt(3, idClass);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -67,6 +69,6 @@ public class ScoreDAO {
     public static void main(String[] args) {
         ScoreDAO sd = new ScoreDAO();
 //        System.out.println(sd.showScore(1,1).getTotalScore());
-        System.out.println(sd.showScore(5));
+        //System.out.println(sd.showScore(5));
     }
 }
