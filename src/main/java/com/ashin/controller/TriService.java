@@ -1,14 +1,8 @@
 package com.ashin.controller;
 
 
-import com.ashin.DAO.RegisterDAO;
-import com.ashin.DAO.TeacherDAO;
-import com.ashin.model.Comment;
-import com.ashin.DAO.CommentDAO;
-import com.ashin.model.TeacherClass;
-import com.ashin.model.Topic;
-import com.ashin.DAO.TopicDAO;
-import com.ashin.model.UserRegister;
+import com.ashin.DAO.*;
+import com.ashin.model.*;
 import com.ashin.security.JwtGetUserDetail;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,6 +98,16 @@ public class TriService {
     public ArrayList<TeacherClass> getClassTeach(@PathVariable int idTeacher){
         ArrayList<TeacherClass> result = teacherDAO.getListClasses(idTeacher);
         return result;
+    }
+    @RequestMapping(value = "/viewTestScheduleTeacher/{semester}/{idTeacher}", method = RequestMethod.GET)
+    public ArrayList<TestSchedule> getTestSchedule(@PathVariable int semester, @PathVariable int idTeacher) {
+        TestScheDAO testSchDAO = new TestScheDAO();
+        return testSchDAO.showTeacherOnTestSche(semester, idTeacher);
+    }
+    @RequestMapping(value = "/viewTeacherSchedule/{idTeacher}/{semester}/{weekday}", method = RequestMethod.GET)
+    public ArrayList<Schedule> getSchedule(@PathVariable int idTeacher, @PathVariable int semester, @PathVariable int weekday) {
+        ScheDAO scheDAO = new ScheDAO();
+        return scheDAO.showTeacherSchedule(idTeacher, semester, weekday);
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)

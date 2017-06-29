@@ -1,7 +1,6 @@
 package com.ashin.controller;
 
 import com.ashin.DAO.*;
-import com.ashin.model.Account;
 import com.ashin.model.MessageResult;
 import com.ashin.model.Student;
 import com.ashin.model.*;
@@ -100,7 +99,7 @@ public class KhuongService {
     @RequestMapping(value = "/viewSchedule/{idClass}/{semester}/{weekday}", method = RequestMethod.GET)
     public ArrayList<Schedule> getSchedule(@PathVariable int idClass, @PathVariable int semester, @PathVariable int weekday) {
         ScheDAO scheDAO = new ScheDAO();
-        return scheDAO.showSchedule(idClass, semester, weekday);
+        return scheDAO.showClassSchedule(idClass, semester, weekday);
     }
 
 

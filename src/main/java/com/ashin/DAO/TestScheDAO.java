@@ -64,6 +64,55 @@ public class TestScheDAO {
         return null;
     }
 
+    public ArrayList<TestSchedule> showTeacherOnTestSche(int semester, int idTeacher){
+        Connection connect = null;
+        PreparedStatement ps =null;
+        ObjectPool pool = MyPool.getInstance();
+        ArrayList<TestSchedule> listTestSCh = new ArrayList<TestSchedule>();
+        try {
+            connect = (Connection) pool.borrowObject();
+            ps = connect.prepareStatement("SELECT * FROM V_LICHTHI WHERE V_LICHTHI.HOC_KY=? AND V_LICHTHI.MA_GV_CT = ?");
+
+            ps.setInt(1, semester);
+            ps.setInt(2, idTeacher);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TestSchedule ts = new TestSchedule();
+                ts.setSemester(rs.getInt(1));
+                ts.setIdSubject(rs.getInt(2));
+                ts.setNameSubject(rs.getString(3));
+                ts.setIdClass(rs.getInt(4));
+                ts.setNameClass(rs.getString(5));
+                ts.setTestDay(rs.getTimestamp(6));
+                ts.setStartLesson(rs.getInt(7));
+                ts.setTestTime(rs.getInt(8));
+                ts.setIdTeacherWatch(rs.getInt(9));
+                ts.setNameTeacher(rs.getString(10));
+                listTestSCh.add(ts);
+            }
+            rs.close();
+            return listTestSCh;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connect != null)
+                    pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     //test
     public static void main(String[] args) {
 //        TestScheDAO testSchDAO = new TestScheDAO();
