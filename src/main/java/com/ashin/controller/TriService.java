@@ -2,8 +2,10 @@ package com.ashin.controller;
 
 
 import com.ashin.DAO.RegisterDAO;
+import com.ashin.DAO.TeacherDAO;
 import com.ashin.model.Comment;
 import com.ashin.DAO.CommentDAO;
+import com.ashin.model.TeacherClass;
 import com.ashin.model.Topic;
 import com.ashin.DAO.TopicDAO;
 import com.ashin.model.UserRegister;
@@ -22,6 +24,7 @@ public class TriService {
     private CommentDAO commentDAO = new CommentDAO();
     private TopicDAO topicDAO = new TopicDAO();
     private RegisterDAO registerDAO = new RegisterDAO();
+    private TeacherDAO teacherDAO = new TeacherDAO();
     private static final String SUCCESS_RESULT = "SUCCESS";
     private static final String FAILURE_RESULT = "FAILURE";
 
@@ -95,6 +98,12 @@ public class TriService {
             return SUCCESS_RESULT;
         }
         return FAILURE_RESULT;
+    }
+
+    @RequestMapping(value = "getClassTeach/{idTeacher}", method = RequestMethod.GET)
+    public ArrayList<TeacherClass> getClassTeach(@PathVariable int idTeacher){
+        ArrayList<TeacherClass> result = teacherDAO.getListClasses(idTeacher);
+        return result;
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)

@@ -10,7 +10,7 @@ public class Teacher {
     private int idTeacher, idClass;
     private String name, sex, address, username, nameClass, nameSchool;
     private Date dateBorn;
-
+    private ArrayList<TeacherClass> teacherClasses;
 
     public Teacher(int idTeacher, String name, String sex, String address, Date dateBorn, String nameSchool, String username, int idClass, String nameClass) {
         this.idTeacher = idTeacher;
@@ -25,6 +25,14 @@ public class Teacher {
     }
 
     public Teacher() {
+    }
+
+    public ArrayList<TeacherClass> getAClasses() {
+        return teacherClasses;
+    }
+
+    public void setAClasses(ArrayList<TeacherClass> TeacherClasses) {
+        this.teacherClasses = TeacherClasses;
     }
 
     public int getIdClass() {

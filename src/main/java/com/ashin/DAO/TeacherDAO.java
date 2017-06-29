@@ -1,9 +1,8 @@
 package com.ashin.DAO;
 
 import com.ashin.connection.MyPool;
-import com.ashin.model.Student;
+import com.ashin.model.TeacherClass;
 import com.ashin.model.Teacher;
-import com.ashin.model.Topic;
 import org.apache.commons.pool.ObjectPool;
 
 import java.sql.Connection;
@@ -11,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by anluo on 4/16/2017.
@@ -53,6 +53,56 @@ public class TeacherDAO {
             try {
                 if (connect != null)
                     pool.returnObject(connect);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<TeacherClass> getListClasses(int idTeacher) {
+        ArrayList<TeacherClass> teacherClasses = new ArrayList<>();
+        String sql = "SELECT * FROM V_TEACHERCLASS WHERE V_TEACHERCLASS.NAM_HOC=? AND V_TEACHERCLASS.MA_GV=?";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ObjectPool pool = MyPool.getInstance();
+
+        Date date = new Date();
+
+        int year = 1900 + date.getYear();
+        int month = date.getMonth();
+
+        if (month > 7) {
+            year++;
+        }
+
+        try {
+            connection = (Connection) pool.borrowObject();
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, year);
+            ps.setInt(2, idTeacher);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idClass = rs.getInt(3);
+                String nameClass = rs.getString(4);
+                teacherClasses.add(new TeacherClass(idClass, nameClass));
+            }
+            rs.close();
+            return teacherClasses;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connection != null)
+                    pool.returnObject(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (Exception e) {
