@@ -57,7 +57,7 @@ public class NotifDAO {
     }
 
     public void insertGroup(GroupNotification grnotif) {
-        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG,THOI_GIAN) values(?,?,?,N?,N?,?)";
+        String sql = "insert into THONGBAO(ID_TB,NGUOIGUI,NGUOINHAN,TIEU_DE,NOI_DUNG) values(?,?,?,N?,N?)";
         Connection connection = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
@@ -66,14 +66,13 @@ public class NotifDAO {
             Notification no = new Notification();
             int temp = grnotif.getId();
             for (int i = 0; i < grnotif.getReceiver().size(); i++) {
-                no = new Notification(grnotif.getSender(), grnotif.getReceiver().get(i), grnotif.getTitle(), grnotif.getNoti(), grnotif.getDate());
+                no = new Notification(grnotif.getSender(), grnotif.getReceiver().get(i), grnotif.getTitle(), grnotif.getNoti());
                 ps = connection.prepareStatement(sql);
                 ps.setInt(1, no.getId());
                 ps.setString(2, no.getSender());
                 ps.setString(3, no.getReceiver());
                 ps.setString(4, no.getTitle());
                 ps.setString(5, no.getNoti());
-                ps.setTimestamp(6, no.getDate());
                 ps.executeUpdate();
                 pn.sendNotification(no);
             }

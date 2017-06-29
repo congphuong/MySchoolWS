@@ -24,10 +24,9 @@ public class Notification {
         this.title = title;
     }
 
-    public Notification(String sender, String receiver, String title, String noti, Timestamp date) {
+    public Notification(String sender, String receiver, String title, String noti) {
         this.noti = noti;
         this.sender = sender;
-        this.date = date;
         this.receiver = receiver;
         this.title = title;
     }
