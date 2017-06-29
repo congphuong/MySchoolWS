@@ -18,7 +18,7 @@ public class TopicDAO {
         Connection connect = null;
         PreparedStatement ps = null;
         ObjectPool pool = MyPool.getInstance();
-        String sql = "INSERT INTO TOPIC(USERNAME, MA_LOP, THOI_GIAN, CHU_DE, NOI_DUNG, SO_CMT) VALUE(?,?,NOW(),N?,N?,0);";
+        String sql = "INSERT INTO TOPIC(USERNAME, MA_LOP, CHU_DE, NOI_DUNG, SO_CMT) VALUE(?,?,N?,N?,0);";
         int result = 0;
         try {
             int i;
