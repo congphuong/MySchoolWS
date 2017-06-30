@@ -111,15 +111,21 @@ public class TriService {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String register(@RequestBody UserRegister userRegister){
+    public MessageResult register(@RequestBody UserRegister userRegister){
+        MessageResult messageResult = new MessageResult();
         if(userRegister.getUserName()=="" && userRegister.getPassword()==""){
-            return FAILURE_RESULT;
+            messageResult.setMessage("failure");
+            messageResult.setSuccess(false);
+            return messageResult;
         }
         int result = registerDAO.addUser(userRegister);
+
         if(result==1){
-            return SUCCESS_RESULT;
+            messageResult.setSuccess(true);
+            messageResult.setMessage("success");
+            return messageResult;
         }
-        return FAILURE_RESULT;
+        return messageResult;
     }
 
 }
