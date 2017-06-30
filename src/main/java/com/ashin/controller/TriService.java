@@ -112,6 +112,9 @@ public class TriService {
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public String register(@RequestBody UserRegister userRegister){
+        if(userRegister.getUserName()=="" && userRegister.getPassword()==""){
+            return FAILURE_RESULT;
+        }
         int result = registerDAO.addUser(userRegister);
         if(result==1){
             return SUCCESS_RESULT;
