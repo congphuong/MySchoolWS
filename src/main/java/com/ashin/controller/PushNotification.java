@@ -80,9 +80,18 @@ public class PushNotification {
             JSONObject json = new JSONObject();
             json.put("to", token.trim());
             JSONObject info = new JSONObject();
-            info.put("title", input.getTitle()); // Notification title
             info.put("body", input.getNoti()); // Notification body
-            json.put("notification", info);
+            info.put("title", input.getTitle());
+            info.put("color", "#00ACD4");
+            info.put("priority", "high");
+            info.put("icon","ic_notif");
+            info.put("group", "GROUP");
+            info.put("id", input.getId());
+            info.put("show_in_foreground", true);
+            JSONObject data = new JSONObject();
+            data.put("type","MEASURE_CHANGE");
+            data.put("custom_notification",info);
+            json.put("data", data);
             try {
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(json.toString());

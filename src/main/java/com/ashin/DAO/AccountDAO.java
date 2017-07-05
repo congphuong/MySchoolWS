@@ -126,7 +126,7 @@ public class AccountDAO {
             ps.setString(1, input.getToken());
             ps.executeUpdate();
 //            System.out.println("Succeed update token !");
-            connect.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
